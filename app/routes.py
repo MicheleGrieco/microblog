@@ -2,8 +2,9 @@ from flask import render_template, flash, redirect
 from app import app
 from app.forms import LoginForm
 
-@app.route('/')
-@app.route('/index')
+# View functions
+@app.route('/') # Decorator, used to register functions as callbacks for certain events
+@app.route('/index') # Same as the above
 def index():
     user = {'username': 'Miguel'}
     posts = [
@@ -18,7 +19,7 @@ def index():
     ]
     return render_template('index.html', title='Home', user=user, posts=posts)
 
-@app.route('/login')
+@app.route('/login') # Yet another decorator
 def login():
     form = LoginForm()
     if form.validate_on_submit():
