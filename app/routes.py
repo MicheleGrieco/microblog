@@ -19,7 +19,7 @@ def index():
     ]
     return render_template('index.html', title='Home', user=user, posts=posts)
 
-@app.route('/login') # Yet another decorator
+@app.route('/login', methods=['GET', 'POST']) # Yet another decorator, which overwrites default GET allowance
 def login():
     form = LoginForm()
     if form.validate_on_submit():
