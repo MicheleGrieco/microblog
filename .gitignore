@@ -26,9 +26,6 @@ var/
 # Flask instance folder
 instance/
 
-# Flask migrations (if using Flask-Migrate)
-migrations/
-
 # PyInstaller
 *.manifest
 *.spec
