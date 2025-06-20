@@ -2,7 +2,7 @@
 
 Flask web app built following <a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world" target="_blank">The Flask Mega Tutorial</a>.
 
-## 🚀 Overview
+## Overview
 
 This mini-app demonstrates how to:
 
@@ -61,7 +61,7 @@ microblog/
 ```
 
 * **app/**init**.py**: Initializes the `Flask` app instance and imports routes.
-* **app/routes.py**: Defines the `index()` view with two routes (`/` and `/index`) returning **"Hello, World!"**.
+* **app/routes.py**: Defines the views with routes (`/*`).
 * **microblog.py**: Imports the app and serves as the entry point for Flask CLI.
 
 ---
@@ -99,8 +99,15 @@ microblog/
 
 ---
 
+## Useful Links
+
+<a href='https://flask.palletsprojects.com/en/stable/' target='_blank'>Flask documentation</a>
+<a href='https://www.sqlalchemy.org/' target='_blank'>SQLAlchemy documentation</a>
+
+---
+
 ## What’s Next?
 
-Continue with Miguel Grinberg’s Mega‑Tutorial to add templates, forms, database support, user authentication, deployment, and more.
+Add templates, forms, database support, user authentication, deployment, and more.
 
 Check out the [official tutorial post](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) and the \[full Microblog project on GitHub].
