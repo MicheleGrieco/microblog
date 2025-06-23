@@ -3,6 +3,7 @@ from typing import Optional
 import sqlalchemy as sa # general purpose database functions and classes such as types and query building helpers
 import sqlalchemy.orm as so # support for using models
 from app import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -23,6 +24,16 @@ class User(db.Model):
         :see: https://docs.python.org/3/reference/datamodel.html#object.__repr__
         """
         return '<User {}>'.format(self.username)
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+        
+    def check_password(self, password):
+        match self.password_hash:
+            case str():
+                return check_password_hash(self.password_hash, password)
+            case _:
+                return False
     
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
