@@ -3,3 +3,4 @@ python-dotenv
 flask-wtf
 flask-sqlalchemy
 flask_migrate
+flask-login
