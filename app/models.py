@@ -3,6 +3,7 @@ from typing import Optional
 import sqlalchemy as sa # general purpose database functions and classes such as types and query building helpers
 import sqlalchemy.orm as so # support for using models
 from app import db
+from app import login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # safe implementations for user login requirements
 
@@ -54,3 +55,16 @@ class Post(db.Model):
         :see: https://docs.python.org/3/reference/datamodel.html#object.__repr__
         """
         return '<Post {}>'.format(self.body)
+    
+    
+@login.user_loader
+def load_user(id):
+    """
+    Loads a user from the database by their ID.
+    The id can be an integer or a string, and it will be converted to an integer.
+    :param id: The ID of the user to load.
+    :type id: int or str
+    :return: The User object if found, or None if not found.
+    :rtype: User or None
+    """
+    return db.session.get(User, int(id))
