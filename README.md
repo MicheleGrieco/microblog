@@ -101,8 +101,9 @@ microblog/
 
 ## Useful Links
 
-<a href='https://flask.palletsprojects.com/en/stable/' target='_blank'>Flask documentation</a>
-<a href='https://www.sqlalchemy.org/' target='_blank'>SQLAlchemy documentation</a>
+<p><a href='https://flask.palletsprojects.com/en/stable/' target='_blank'>Flask documentation</a></p>
+<p><a href='https://www.sqlalchemy.org/' target='_blank'>SQLAlchemy documentation</a></p>
+<p><a href='https://flask-login.readthedocs.io/en/latest/' target='_blank'>Flask Login documentation</a></p>
 
 ---
 
