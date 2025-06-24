@@ -1,13 +1,11 @@
 import sqlalchemy as sa
 from flask import render_template, flash, redirect, url_for
 from flask import request
-from flask_login import current_user, login_user
-from flask_login import logout_user
-from flask_login import login_required
+from flask_login import current_user, login_user, login_required, logout_user
 from urllib.parse import urlsplit
 from app import app, db
+from app.forms import LoginForm, RegistrationForm
 from app.models import User
-from app.forms import LoginForm
 
 # View functions
 @app.route('/') # Decorator, used to register functions as callbacks for certain events
@@ -48,3 +46,21 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    # Make sure user is not logged in
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User()
+        user.username=str(form.username.data)
+        user.email=str(form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+        
