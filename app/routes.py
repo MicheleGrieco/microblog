@@ -74,7 +74,7 @@ def register():
 def user(username):
     user = db.first_or_404(sa.select(User).where(User.username == username))
     posts = [
-        {'author': user, 'body': 'Test post #1'}
+        {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'}
     ]
     return render_template('user.html', user=user, posts=posts)
