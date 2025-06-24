@@ -42,7 +42,7 @@ venv\Scripts\Activate.ps1      # On Windows PowerShell
 ### 3. Install dependencies
 
 ```bash
-pip install flask flask_sqlalchemy flask_migrate flask_login flask_wtf email_validator
+pip install -r requirements.txt
 ```
 
 ---
