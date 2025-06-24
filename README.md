@@ -1,25 +1,23 @@
 # Microblog
 
-Flask web app built following <a href="https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world" target="_blank">The Flask Mega Tutorial</a>.
+Flask web application inspired by the [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world).
 
 ## Overview
 
 This mini-app demonstrates how to:
 
-* Set up a Python virtual environment
-* Install and import the Flask framework
-* Structure a minimal Flask project with a package
-* Create a basic route and view function
-* Run the development server
-
-By the end, it’ll be a working Flask app that responds at `http://localhost:5000/` or `/index`.
+* Manage users with authentication (login/logout) and registration
+* Use Flask, Flask-WTF, Flask-Login, Flask-Migrate, and SQLAlchemy
+* Structure a Flask project with models, routes, and templates
+* Handle a relational database for users and posts
+* Display flash messages and form validation
 
 ---
 
 ## Prerequisites
 
-* Python 3.x installed on your machine
-* Basic familiarity with the command line
+* Python 3.x installed
+* Basic familiarity with the terminal
 
 ---
 
@@ -41,10 +39,10 @@ venv\Scripts\activate          # On Windows (cmd.exe)
 venv\Scripts\Activate.ps1      # On Windows PowerShell
 ```
 
-### 3. Install Flask
+### 3. Install dependencies
 
 ```bash
-pip install flask
+pip install flask flask_sqlalchemy flask_migrate flask_login flask_wtf email_validator
 ```
 
 ---
@@ -53,16 +51,21 @@ pip install flask
 
 ```
 microblog/
-├── venv/           # Virtual environment
-├── app/            
-│   ├── __init__.py # Flask app instance
-│   └── routes.py   # Route definitions
-└── microblog.py    # WSGI entry point
+├── venv/                   # Virtual environment
+├── app/
+│   ├── __init__.py         # Flask app, db, login manager initialization
+│   ├── models.py           # User and Post models (SQLAlchemy)
+│   ├── routes.py           # Routes: index, login, logout, register
+│   ├── forms.py            # Login and registration forms (Flask-WTF)
+│   └── templates/
+│       ├── base.html
+│       ├── index.html
+│       ├── login.html
+│       └── register.html
+├── migrations/             # Database migrations (Flask-Migrate)
+├── microblog.py            # WSGI entry point
+└── README.md
 ```
-
-* **app/**init**.py**: Initializes the `Flask` app instance and imports routes.
-* **app/routes.py**: Defines the views with routes (`/*`).
-* **microblog.py**: Imports the app and serves as the entry point for Flask CLI.
 
 ---
 
@@ -75,13 +78,21 @@ microblog/
    set FLASK_APP=microblog.py          # Windows CMD
    ```
 
-2. Start the development server:
+2. (Optional) Initialize the database:
+
+   ```bash
+   flask db init
+   flask db migrate -m "Initial migration"
+   flask db upgrade
+   ```
+
+3. Start the development server:
 
    ```bash
    flask run
    ```
 
-3. Visit your app in a browser:
+4. Visit the app in your browser:
 
    ```
    http://127.0.0.1:5000/
@@ -90,25 +101,39 @@ microblog/
 
 ---
 
-## Notes & Best Practices
+## Current Features
 
-* Use [`venv`](https://docs.python.org/3/library/venv.html) to isolate dependencies.
-* Use `requirements.txt` to install all the dependencies at once.
-* Keep environment variables in an optional `.flaskenv` (requires `python-dotenv`) to avoid repeatedly exporting them.
-* The import of `routes` inside `app/__init__.py` avoids circular dependencies common in Flask apps.
+* User registration with unique email and username validation
+* Login/logout with user session management
+* Flash message display
+* Example posts shown on the home page
+* HTML templates with Jinja2
+
+---
+
+## Main Dependencies
+
+* [Flask](https://flask.palletsprojects.com/)
+* [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/)
+* [Flask-Migrate](https://flask-migrate.readthedocs.io/)
+* [Flask-Login](https://flask-login.readthedocs.io/)
+* [Flask-WTF](https://flask-wtf.readthedocs.io/)
+* [email-validator](https://pypi.org/project/email-validator/)
+
+---
+
+## Next Steps
+
+* Add the ability to create new posts
+* Improve user profile management
+* Post pagination
+* Deployment to a production server
 
 ---
 
 ## Useful Links
 
-<p><a href='https://flask.palletsprojects.com/en/stable/' target='_blank'>Flask documentation</a></p>
-<p><a href='https://www.sqlalchemy.org/' target='_blank'>SQLAlchemy documentation</a></p>
-<p><a href='https://flask-login.readthedocs.io/en/latest/' target='_blank'>Flask Login documentation</a></p>
-
----
-
-## What’s Next?
-
-Add templates, forms, database support, user authentication, deployment, and more.
-
-Check out the [official tutorial post](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) and the \[full Microblog project on GitHub].
+* [Flask documentation](https://flask.palletsprojects.com/en/stable/)
+* [SQLAlchemy documentation](https://www.sqlalchemy.org/)
+* [Flask-Login documentation](https://flask-login.readthedocs.io/en/latest/)
+* [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
