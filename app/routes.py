@@ -69,10 +69,13 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
         
-@app.route('/user/<username>')
+@app.route('/user/<username>') # Dynamic decorator
 @login_required
 def user(username):
+    # Works as scalar() when there are results,
+    # sends a 404 to the client otherwise
     user = db.first_or_404(sa.select(User).where(User.username == username))
+    # Placeholder list of posts
     posts = [
         {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'}
