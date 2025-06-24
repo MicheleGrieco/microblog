@@ -26,16 +26,19 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST']) # Yet another decorator, which overwrites default GET allowance
 def login():
+    # Check if the user is already logged in
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
+        # Retrieve the user from the database
+        # If the user or password do not exist, redirect again to login form
         user = db.session.scalar(sa.select(User).where(User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password.')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        
+        # Check for "next" URL args, than redirect to them
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '': # check if URL is relative or not
             next_page = url_for('index')
@@ -54,6 +57,8 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Create the user with username, email and password
+        # Add it to the database
         user = User()
         user.username=str(form.username.data)
         user.email=str(form.email.data)
