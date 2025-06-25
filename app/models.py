@@ -6,6 +6,7 @@ from app import db
 from app import login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin # safe implementations for user login requirements
+from hashlib import md5
 
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -13,6 +14,20 @@ class User(UserMixin, db.Model):
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256)) # 'Optional' attribute for NULL values
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author') # WriteOnlyMapped defines posts as a collection type with Post objects inside
+    
+    def avatar(self, size):
+        """
+        Generates a Gravatar URL for the user based on their email address.
+        :param size: The size of the avatar image in pixels.
+        :type size: int
+        :return: A URL to the Gravatar image.
+        :rtype: str
+        :example: 'https://www.gravatar.com/avatar/abc123?d=identicon&s=128'
+        :note: The email is converted to lowercase and hashed using MD5 to create a unique identifier for the Gravatar.
+        :see: https://en.gravatar.com/site/implement/images/
+        """
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest() # needs to be lowercase and encoded in utf-8
+        return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}' # 'd' is the default image type, 's' is the size of the image
     
     def __repr__(self):
         """
