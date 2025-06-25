@@ -11,12 +11,13 @@ This mini-app demonstrates how to:
 * Structure a Flask project with models, routes, and templates
 * Handle a relational database for users and posts
 * Display flash messages and form validation
+* Display user profile pages
 
 ---
 
 ## Prerequisites
 
-* Python 3.x installed
+* Python 3.7+ installed
 * Basic familiarity with the terminal
 
 ---
@@ -37,6 +38,7 @@ python3 -m venv venv
 source venv/bin/activate       # On macOS/Linux
 venv\Scripts\activate          # On Windows (cmd.exe)
 venv\Scripts\Activate.ps1      # On Windows PowerShell
+# Use only the command appropriate for your shell
 ```
 
 ### 3. Install dependencies
@@ -55,13 +57,15 @@ microblog/
 ├── app/
 │   ├── __init__.py         # Flask app, db, login manager initialization
 │   ├── models.py           # User and Post models (SQLAlchemy)
-│   ├── routes.py           # Routes: index, login, logout, register
+│   ├── routes.py           # Routes: index, login, logout, register, user profile
 │   ├── forms.py            # Login and registration forms (Flask-WTF)
 │   └── templates/
 │       ├── base.html
 │       ├── index.html
 │       ├── login.html
-│       └── register.html
+│       ├── register.html
+│       ├── user.html
+│       └── _post.html
 ├── migrations/             # Database migrations (Flask-Migrate)
 ├── microblog.py            # WSGI entry point
 └── README.md
@@ -76,6 +80,7 @@ microblog/
    ```bash
    export FLASK_APP=microblog.py       # macOS/Linux
    set FLASK_APP=microblog.py          # Windows CMD
+   $env:FLASK_APP = "microblog.py"     # Windows PowerShell
    ```
 
 2. (Optional) Initialize the database:
@@ -106,7 +111,8 @@ microblog/
 * User registration with unique email and username validation
 * Login/logout with user session management
 * Flash message display
-* Example posts shown on the home page
+* Example posts shown on the home page (currently hardcoded)
+* User profile pages at `/user/<username>`
 * HTML templates with Jinja2
 
 ---
