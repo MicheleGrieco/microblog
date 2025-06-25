@@ -43,9 +43,23 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
     
     def set_password(self, password):
+        """
+        Sets the password for the user by hashing it.
+        This method uses a secure hashing algorithm to store the password securely.
+        :param password: The plaintext password to be hashed.
+        :type password: str
+        :return: None
+        """
         self.password_hash = generate_password_hash(password)
         
     def check_password(self, password):
+        """
+        Checks if the provided password matches the stored hashed password.
+        This method is used to verify a user's password during login.
+        :param password: The plaintext password to check.
+        :type password: str
+        :return: True if the password matches, False otherwise.
+        """
         match self.password_hash:
             case str():
                 return check_password_hash(self.password_hash, password)
@@ -70,6 +84,7 @@ class Post(db.Model):
         :see: https://docs.python.org/3/reference/datamodel.html#object.__repr__
         """
         return '<Post {}>'.format(self.body)
+    
     
     
 @login.user_loader
