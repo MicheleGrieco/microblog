@@ -12,12 +12,13 @@ This mini-app demonstrates how to:
 * Handle a relational database for users and posts
 * Display flash messages and form validation
 * Display user profile pages
+* Edit user profile (username and "about me" field)
 
 ---
 
 ## Prerequisites
 
-* Python 3.7+ installed
+* Python 3.12+ installed
 * Basic familiarity with the terminal
 
 ---
@@ -57,14 +58,15 @@ microblog/
 ├── app/
 │   ├── __init__.py         # Flask app, db, login manager initialization
 │   ├── models.py           # User and Post models (SQLAlchemy)
-│   ├── routes.py           # Routes: index, login, logout, register, user profile
-│   ├── forms.py            # Login and registration forms (Flask-WTF)
+│   ├── routes.py           # Routes: index, login, logout, register, user profile, edit profile
+│   ├── forms.py            # Login, registration, and edit profile forms (Flask-WTF)
 │   └── templates/
 │       ├── base.html
 │       ├── index.html
 │       ├── login.html
 │       ├── register.html
 │       ├── user.html
+│       ├── edit_profile.html
 │       └── _post.html
 ├── migrations/             # Database migrations (Flask-Migrate)
 ├── microblog.py            # WSGI entry point
@@ -113,6 +115,7 @@ microblog/
 * Flash message display
 * Example posts shown on the home page (currently hardcoded)
 * User profile pages at `/user/<username>`
+* Edit profile page for the logged-in user
 * HTML templates with Jinja2
 
 ---
@@ -131,6 +134,7 @@ microblog/
 ## Next Steps
 
 * Add the ability to create new posts
+* Display real posts from the database on the home page
 * Improve user profile management
 * Post pagination
 * Deployment to a production server
