@@ -3,9 +3,11 @@ from flask import render_template, flash, redirect, url_for
 from flask import request
 from flask_login import current_user, login_user, login_required, logout_user
 from urllib.parse import urlsplit
+from datetime import datetime, timezone
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
+
 
 # View functions
 @app.route('/') # Decorator, used to register functions as callbacks for certain events
@@ -23,6 +25,7 @@ def index():
         }
     ]
     return render_template('index.html', title='Home', posts=posts)
+
 
 @app.route('/login', methods=['GET', 'POST']) # Yet another decorator, which overwrites default GET allowance
 def login():
@@ -45,10 +48,12 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -69,6 +74,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
         
+        
 @app.route('/user/<username>') # Dynamic decorator
 @login_required
 def user(username):
@@ -81,3 +87,14 @@ def user(username):
         {'author': user, 'body': 'Test post #2'}
     ]
     return render_template('user.html', user=user, posts=posts)
+
+
+@app.before_request
+def before_request():
+    """
+    Update the last seen time of the current user before each request.
+    :return: None
+    """
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now(timezone.utc)
+        db.session.commit() # no db.session.add() needed, since the user is already in the session
