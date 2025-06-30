@@ -14,6 +14,13 @@ from app.models import User
 @app.route('/index') # Same as the above
 @login_required
 def index():
+    """
+    The main page of the application, which is only accessible to logged-in users.
+    It displays a list of posts, which are currently hardcoded.
+    :return: Rendered HTML template for the index page.
+    :rtype: str
+    :raises: None
+    """
     posts = [
         {
             'author': {'username': 'John'},
@@ -29,6 +36,15 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST']) # Yet another decorator, which overwrites default GET allowance
 def login():
+    """
+    The login page of the application, which allows users to log in with their credentials.
+    If the user is already logged in, they are redirected to the index page.
+    If the login form is submitted and valid, the user is authenticated and logged in.
+    If the credentials are invalid, an error message is displayed.
+    :return: Rendered HTML template for the login page or a redirect to the index page.
+    :rtype: str
+    :raises: None
+    """
     # Check if the user is already logged in
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -51,12 +67,26 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """
+    The logout route of the application, which logs out the current user and redirects them to the index page.
+    :return: Redirect to the index page.
+    :rtype: werkzeug.wrappers.Response
+    :raises: None
+    """
     logout_user()
     return redirect(url_for('index'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    The registration page of the application, which allows new users to create an account.
+    If the user is already logged in, they are redirected to the index page.
+    If the registration form is submitted and valid, a new user is created and added to the database.
+    :return: Rendered HTML template for the registration page or a redirect to the login page
+    :rtype: str
+    :raises: None
+    """
     # Make sure user is not logged in
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -78,6 +108,15 @@ def register():
 @app.route('/user/<username>') # Dynamic decorator
 @login_required
 def user(username):
+    """
+    The user profile page, which displays the user's information and their posts.
+    If the user does not exist, a 404 error is raised.
+    :param username: The username of the user whose profile is being viewed.
+    :type username: str
+    :return: Rendered HTML template for the user profile page.
+    :rtype: str
+    :raises: 404 error if the user does not exist.
+    """
     # Works as scalar() when there are results,
     # sends a 404 to the client otherwise
     user = db.first_or_404(sa.select(User).where(User.username == username))
@@ -103,6 +142,14 @@ def before_request():
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    """
+    The edit profile page, which allows users to update their profile information.
+    If the form is submitted and valid, the user's information is updated in the database.
+    If the request method is GET, the form is pre-filled with the current user's data.
+    :return: Rendered HTML template for the edit profile page.
+    :rtype: str
+    :raises: None
+    """
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit:
         current_user.username = form.username.data
