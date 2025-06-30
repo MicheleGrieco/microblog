@@ -1,7 +1,7 @@
 """
 Module Name: routes.py
 Author: Michele Grieco
-Created: 2025-06-??
+Created: 2025-06-12
 Description:
     This module contains the view functions for the Flask application.
     It handles user authentication, registration, profile editing, and the main index page.

@@ -1,7 +1,7 @@
 """
 Module Name: errors.py
 Author: Michele Grieco
-Created: 2025-06-??
+Created: 2025-06-29
 Description:
     This module handles error pages for the Flask application.
     It defines custom error handlers for 404 (Not Found) and 500 (Internal Server Error) errors.

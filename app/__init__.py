@@ -1,7 +1,7 @@
 """
 Module Name: __init__.py
 Author: Michele Grieco
-Created: 2025-06-??
+Created: 2025-06-12
 Description:
     This module initializes the Flask application and its extensions.
     It sets up the application configuration, database, migration engine, and login manager.

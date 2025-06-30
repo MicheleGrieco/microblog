@@ -1,7 +1,7 @@
 """
 Module Name: models.py
 Author: Michele Grieco
-Created: 2025-06-??
+Created: 2025-06-19
 Description:
     This module defines the database models for the Flask application.
     It includes the User and Post models, which represent users and their posts in the application.
