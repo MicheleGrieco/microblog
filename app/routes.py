@@ -64,7 +64,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         # Retrieve the user from the database
-        # If the user or password do not exist, redirect again to login form
+        # If the user or password does not exist, redirect again to login form
         user = db.session.scalar(sa.select(User).where(User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password.')
