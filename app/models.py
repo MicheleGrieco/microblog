@@ -17,11 +17,12 @@ from datetime import datetime, timezone
 from typing import Optional
 import sqlalchemy as sa # general purpose database functions and classes such as types and query building helpers
 import sqlalchemy.orm as so # support for using models
-from app import db
-from app import login
+from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin # safe implementations for user login requirements
 from hashlib import md5
+
+# Safe implementations for user login requirements (is_authenticated, is_active, is_anonymous, get_id())
+from flask_login import UserMixin
 
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -82,6 +83,7 @@ class User(UserMixin, db.Model):
                 return check_password_hash(self.password_hash, password)
             case _:
                 return False
+    
     
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)

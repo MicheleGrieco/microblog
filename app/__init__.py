@@ -27,6 +27,8 @@ app.config.from_object(Config)
 db = SQLAlchemy(app) # Database instance
 migrate = Migrate(app, db) # Database migration engine
 login = LoginManager(app)
+
+# Endpoint for login view
 login.login_view = 'login' # type: ignore
 
 # Email logger enabled only when app is running without debug mode
