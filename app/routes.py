@@ -70,7 +70,7 @@ def login():
             flash('Invalid username or password.')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        # Check for "next" URL args, than redirect to them
+        # Check for "next" URL args, then redirect to them
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '': # check if URL is relative or not
             next_page = url_for('index')
