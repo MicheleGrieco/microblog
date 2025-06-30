@@ -1,3 +1,18 @@
+"""
+Module Name: microblog.py
+Author: Michele Grieco
+Created: 2025-06-12
+Description:
+    This module defines the Flask shell context for the application.
+    It allows you to access the database and models directly in the Flask shell.
+    The `make_shell_context` function returns a dictionary that will be used to populate the shell context.
+    This allows you to use the database and models without needing to import them manually in the shell.
+
+Usage:
+    This module is imported by the main application and is used to set up the Flask shell context.
+    When you run `flask shell`, this context will be available, allowing you to interact with the database and models directly.
+"""
+
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 # A Python script at the top-level that defines the Flask application instance.
