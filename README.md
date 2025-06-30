@@ -11,8 +11,9 @@ This mini-app demonstrates how to:
 * Structure a Flask project with models, routes, and templates
 * Handle a relational database for users and posts
 * Display flash messages and form validation
-* Display user profile pages
+* Display user profile pages with avatars (via Gravatar)
 * Edit user profile (username and "about me" field)
+* Show example posts on the home and user pages (currently hardcoded)
 
 ---
 
@@ -52,25 +53,43 @@ pip install -r requirements.txt
 
 ## Project Structure
 
+
 ```
 microblog/
-├── venv/                   # Virtual environment
+├── venv/                      # Virtual environment (not tracked)
 ├── app/
-│   ├── __init__.py         # Flask app, db, login manager initialization
-│   ├── models.py           # User and Post models (SQLAlchemy)
-│   ├── routes.py           # Routes: index, login, logout, register, user profile, edit profile
-│   ├── forms.py            # Login, registration, and edit profile forms (Flask-WTF)
-│   └── templates/
-│       ├── base.html
-│       ├── index.html
-│       ├── login.html
-│       ├── register.html
-│       ├── user.html
-│       ├── edit_profile.html
-│       └── _post.html
-├── migrations/             # Database migrations (Flask-Migrate)
-├── microblog.py            # WSGI entry point
-└── README.md
+│   ├── __init__.py            # Flask app, db, login manager initialization
+│   ├── errors.py              # Error handlers
+│   ├── forms.py               # Login, registration, and edit profile forms (Flask-WTF)
+│   ├── models.py              # User and Post models (SQLAlchemy)
+│   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile
+│   ├── templates/
+│   │   ├── _post.html
+│   │   ├── 404.html
+│   │   ├── 500.html
+│   │   ├── base.html
+│   │   ├── edit_profile.html
+│   │   ├── index.html
+│   │   ├── login.html
+│   │   ├── register.html
+│   │   └── user.html
+│   └── __pycache__/           # Python bytecode cache
+├── migrations/
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── README
+│   ├── script.py.mako
+│   └── versions/
+│       ├── 04c3ecafd324_users_table.py
+│       ├── 4ca96cf1043e_posts_table.py
+│       └── e74b25e42b7c_new_fields_in_user_model.py
+├── app.db                     # SQLite database file
+├── config.py                  # App configuration
+├── Dockerfile                 # (Optional) Docker support
+├── microblog.py               # WSGI entry point
+├── requirements.txt           # Python dependencies
+├── README.md                  # Project documentation
+└── __pycache__/               # Python bytecode cache
 ```
 
 ---
@@ -114,11 +133,20 @@ microblog/
 * Login/logout with user session management
 * Flash message display
 * Example posts shown on the home page (currently hardcoded)
-* User profile pages at `/user/<username>`
+* User profile pages at `/user/<username>` with Gravatar avatar and last seen info
 * Edit profile page for the logged-in user
 * HTML templates with Jinja2
 
 ---
+
+## Limitations
+
+* Posts are not yet stored in the database; only hardcoded examples are shown
+* No post creation or editing functionality yet
+* No pagination or search features
+* No deployment configuration for production
+
+--
 
 ## Main Dependencies
 
@@ -133,11 +161,11 @@ microblog/
 
 ## Next Steps
 
-* Add the ability to create new posts
-* Display real posts from the database on the home page
-* Improve user profile management
-* Post pagination
-* Deployment to a production server
+* Add the ability to create new posts in the database
+* Display real posts from the database on the home and user pages
+* Improve user profile management (e.g., allow avatar upload)
+* Add post pagination
+* Prepare for deployment to a production server
 
 ---
 
