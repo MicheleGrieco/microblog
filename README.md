@@ -56,40 +56,30 @@ pip install -r requirements.txt
 
 ```
 microblog/
-├── venv/                      # Virtual environment (not tracked)
 ├── app/
 │   ├── __init__.py            # Flask app, db, login manager initialization
 │   ├── errors.py              # Error handlers
 │   ├── forms.py               # Login, registration, and edit profile forms (Flask-WTF)
 │   ├── models.py              # User and Post models (SQLAlchemy)
 │   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile
-│   ├── templates/
-│   │   ├── _post.html
-│   │   ├── 404.html
-│   │   ├── 500.html
-│   │   ├── base.html
-│   │   ├── edit_profile.html
-│   │   ├── index.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   └── user.html
-│   └── __pycache__/           # Python bytecode cache
+│   └── templates/
+│       ├── _post.html
+│       ├── 404.html
+│       ├── 500.html
+│       ├── base.html
+│       ├── edit_profile.html
+│       ├── index.html
+│       ├── login.html
+│       ├── register.html
+│       └── user.html
+│   
 ├── migrations/
-│   ├── alembic.ini
-│   ├── env.py
-│   ├── README
-│   ├── script.py.mako
-│   └── versions/
-│       ├── 04c3ecafd324_users_table.py
-│       ├── 4ca96cf1043e_posts_table.py
-│       └── e74b25e42b7c_new_fields_in_user_model.py
 ├── app.db                     # SQLite database file
 ├── config.py                  # App configuration
-├── Dockerfile                 # (Optional) Docker support
+├── Dockerfile                 # Docker support
 ├── microblog.py               # WSGI entry point
 ├── requirements.txt           # Python dependencies
-├── README.md                  # Project documentation
-└── __pycache__/               # Python bytecode cache
+└── README.md                  # Project documentation
 ```
 
 ---
