@@ -1,3 +1,17 @@
+"""
+Module Name: forms.py
+Author: Michele Grieco
+Created: 2025-06-??
+Description:
+    This module defines the forms used in the Flask application.
+    It includes forms for user login, registration, and profile editing.
+    The forms use Flask-WTF for form handling and validation.
+
+Usage:
+    This module is imported by the main application and is used to define the forms for user interactions.
+    The forms are rendered in HTML templates and handle user input validation.
+"""
+
 import sqlalchemy as sa
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField

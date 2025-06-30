@@ -1,3 +1,17 @@
+"""
+Module Name: __init__.py
+Author: Michele Grieco
+Created: 2025-06-??
+Description:
+    This module initializes the Flask application and its extensions.
+    It sets up the application configuration, database, migration engine, and login manager.
+    It also configures logging for the application, including email notifications for errors.
+
+Usage:
+    This module is imported by the main application and is used to set up the Flask app.
+    It initializes the database, migration engine, and login manager, and configures logging.
+"""
+
 import logging
 import os
 from logging.handlers import SMTPHandler, RotatingFileHandler

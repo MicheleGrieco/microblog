@@ -1,3 +1,16 @@
+"""
+Module Name: routes.py
+Author: Michele Grieco
+Created: 2025-06-??
+Description:
+    This module contains the view functions for the Flask application.
+    It handles user authentication, registration, profile editing, and the main index page.
+
+Usage:
+    This module is imported by the main application and is used to define the routes and their corresponding view functions.
+    The view functions render HTML templates and handle user interactions.
+"""
+
 import sqlalchemy as sa
 from flask import render_template, flash, redirect, url_for
 from flask import request

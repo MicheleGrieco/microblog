@@ -1,3 +1,18 @@
+"""
+Module Name: models.py
+Author: Michele Grieco
+Created: 2025-06-??
+Description:
+    This module defines the database models for the Flask application.
+    It includes the User and Post models, which represent users and their posts in the application.
+    The User model includes methods for password hashing and Gravatar avatar generation.
+    The Post model represents user-generated content.
+
+Usage:
+    This module is imported by the main application and is used to define the database schema.
+    The models are used to interact with the database, allowing for user authentication and post management.
+"""
+
 from datetime import datetime, timezone
 from typing import Optional
 import sqlalchemy as sa # general purpose database functions and classes such as types and query building helpers
