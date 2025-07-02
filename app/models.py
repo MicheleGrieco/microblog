@@ -166,9 +166,8 @@ class User(UserMixin, db.Model):
     
     def following_posts(self):
         """
-        Returns a query that retrieves all posts from users that the current user is following.
-        This method constructs a query that joins the Post model with the User model to get posts
-        from users that the current user is following, ordered by the timestamp of the posts in descending order.
+        Returns a query that retrieves posts from users that the current user is following,
+        as well as posts authored by the current user.
         :return: A SQLAlchemy query object that retrieves the posts.
         :rtype: sa.sql.Select
         :note: This method uses SQLAlchemy's ORM capabilities to construct the query.
@@ -179,8 +178,11 @@ class User(UserMixin, db.Model):
         return (
             sa.select(Post)
             .join(Post.author.of_type(Author))
-            .join(Author.followers.of_type(Follower))
-            .where(Follower.id == self.id)
+            .join(Author.followers.of_type(Follower), isouter=True) # Outer join to include posts from users that the current user is following
+            .where(sa.or_(
+                Follower.id == self.id, # Posts from users that the current user is following
+                Author.id == self.id, # Posts authored by the current user
+            ))
             .order_by(Post.timestamp.desc())
         )
     
