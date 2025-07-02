@@ -5,7 +5,9 @@ Created: 2025-06-19
 Description:
     This module defines the database models for the Flask application.
     It includes the User and Post models, which represent users and their posts in the application.
-    The User model includes methods for password hashing and Gravatar avatar generation.
+    The User model includes methods for password hashing and Gravatar avatar generation,
+    as well as methods for following and unfollowing other users.
+    The User model inherits from UserMixin to provide Flask-Login functionality.
     The Post model represents user-generated content.
 
 Usage:
