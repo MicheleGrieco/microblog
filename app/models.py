@@ -164,6 +164,26 @@ class User(UserMixin, db.Model):
         query = sa.select(sa.func.count()).select_from(self.following.select().subquery())
         return db.session.scalar(query)
     
+    def following_posts(self):
+        """
+        Returns a query that retrieves all posts from users that the current user is following.
+        This method constructs a query that joins the Post model with the User model to get posts
+        from users that the current user is following, ordered by the timestamp of the posts in descending order.
+        :return: A SQLAlchemy query object that retrieves the posts.
+        :rtype: sa.sql.Select
+        :note: This method uses SQLAlchemy's ORM capabilities to construct the query.
+        :see: https://docs.sqlalchemy.org/en/14/orm/query.html
+        """
+        Author = so.aliased(User)
+        Follower = so.aliased(User)
+        return (
+            sa.select(Post)
+            .join(Post.author.of_type(Author))
+            .join(Author.followers.of_type(Follower))
+            .where(Follower.id == self.id)
+            .order_by(Post.timestamp.desc())
+        )
+    
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     body: so.Mapped[str] = so.mapped_column(sa.String(140))
