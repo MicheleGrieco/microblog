@@ -48,6 +48,19 @@ class User(UserMixin, db.Model):
                                                             secondaryjoin=(followers.c.follower_id == id),
                                                             back_populates='following')
     
+    def __repr__(self):
+        """
+        Returns a string that includes the username of the user.
+        This method is called when the object is printed or logged.
+        
+        :return: A string representation of the User object.
+        :rtype: str
+        :example: '<User john_doe>'
+        :note: This method is useful for quickly identifying the user in logs or debugging output.
+        :see: https://docs.python.org/3/reference/datamodel.html#object.__repr__
+        """
+        return '<User {}>'.format(self.username)
+    
     def avatar(self, size):
         """
         Generates a Gravatar URL for the user based on their email address.
@@ -61,19 +74,6 @@ class User(UserMixin, db.Model):
         """
         digest = md5(self.email.lower().encode('utf-8')).hexdigest() # needs to be lowercase and encoded in utf-8
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}' # 'd' is the default image type, 's' is the size of the image
-    
-    def __repr__(self):
-        """
-        Returns a string that includes the username of the user.
-        This method is called when the object is printed or logged.
-        
-        :return: A string representation of the User object.
-        :rtype: str
-        :example: '<User john_doe>'
-        :note: This method is useful for quickly identifying the user in logs or debugging output.
-        :see: https://docs.python.org/3/reference/datamodel.html#object.__repr__
-        """
-        return '<User {}>'.format(self.username)
     
     def set_password(self, password):
         """
@@ -99,6 +99,68 @@ class User(UserMixin, db.Model):
             case _:
                 return False
     
+    def is_following(self, user):
+        """
+        Checks if the user is following another user.
+        :param user: The user to check if the current user is following.
+        :type user: User
+        :return: True if the current user is following the specified user, False otherwise.
+        :rtype: bool
+        """
+        query = self.following.select().where(User.id == user.id)
+        return db.session.scalar(query) is not None
+    
+    def follow(self, user):
+        """
+        Follows another user.
+        This method adds the specified user to the current user's following list.
+        :param user: The user to follow.
+        :type user: User
+        :return: None
+        :note: If the user is already being followed, this method does nothing.
+        """
+        if not self.is_following(user):
+            self.following.add(user)
+            
+    def unfollow(self, user):
+        """
+        Unfollows another user.
+        This method removes the specified user from the current user's following list.
+        :param user: The user to unfollow.
+        :type user: User
+        :return: None
+        :note: If the user is not being followed, this method does nothing.
+        """
+        if self.is_following(user):
+            self.following.remove(user)        
+    
+    def followers_count(self):
+        """
+        Returns the number of followers for the user.
+        This method counts the number of users who are following the current user.
+        :return: The number of followers.
+        :rtype: int
+        :note: This method executes a query to count the number of entries in the followers association table
+        for the current user.
+        """
+        # Whenever a query is included as part of a larger query,
+        # SQLAlchemy requires the inner query to be converted to a sub-query by calling the subquery() method.
+        query = sa.select(sa.func.count()).select_from(self.followers.select().subquery())
+        return db.session.scalar(query)
+    
+    def following_count(self):
+        """
+        Returns the number of users that the current user is following.
+        This method counts the number of users that the current user is following.
+        :return: The number of users that the current user is following.
+        :rtype: int
+        :note: This method executes a query to count the number of entries in the following association table
+        for the current user.
+        """
+        # Whenever a query is included as part of a larger query,
+        # SQLAlchemy requires the inner query to be converted to a sub-query by calling the subquery() method.
+        query = sa.select(sa.func.count()).select_from(self.following.select().subquery())
+        return db.session.scalar(query)
     
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
