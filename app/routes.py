@@ -178,6 +178,17 @@ def edit_profile():
 @app.route('/follow/<username>', methods=['POST'])
 @login_required
 def follow(username):
+    """
+    The follow route, which allows the current user to follow another user.
+    If the user does not exist, an error message is displayed.
+    If the user is trying to follow themselves, an error message is displayed.
+    If the user is successfully followed, a success message is displayed.
+    :param username: The username of the user to follow.
+    :type username: str
+    :return: Redirect to the user profile page or the index page.
+    :rtype: werkzeug.wrappers.Response
+    :raises: None
+    """
     form = EmptyForm()
     if form.validate_on_submit():
         user = db.session.scalar(
@@ -197,3 +208,34 @@ def follow(username):
         return redirect(url_for('index'))
     
 
+@app.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    """
+    The unfollow route, which allows the current user to unfollow another user.
+    If the user does not exist, an error message is displayed.
+    If the user is trying to unfollow themselves, an error message is displayed.
+    If the user is successfully unfollowed, a success message is displayed.
+    :param username: The username of the user to unfollow.
+    :type username: str
+    :return: Redirect to the user profile page or the index page.
+    :rtype: werkzeug.wrappers.Response
+    :raises: None
+    """
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = db.session.scalar(
+            sa.select(User).where(User.username == username)
+        )
+        if user is None:
+            flash(f'User {username} not found.')
+            return redirect(url_for('index'))
+        if user == current_user:
+            flash('You cannot unfollow yourself!')
+            return redirect(url_for('user', username=username))
+        current_user.unfollow(user)
+        db.session.commit()
+        flash(f'You are not following {username}.')
+        return redirect(url_for('user', username=username))
+    else:
+        return redirect(url_for('index'))
