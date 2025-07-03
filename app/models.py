@@ -12,7 +12,7 @@ Description:
 
 Usage:
     This module is imported by the main application and is used to define the database schema.
-    The models are used to interact with the database, allowing for user authentication and post management.
+    The models are used to interact with the database and perform CRUD operations.
 """
 
 from datetime import datetime, timezone

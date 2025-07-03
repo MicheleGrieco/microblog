@@ -4,7 +4,7 @@ Author: Michele Grieco
 Created: 2025-06-12
 Description:
     This module defines the forms used in the Flask application.
-    It includes forms for user login, registration, and profile editing.
+    It includes forms for user login, registration, profile editing and other interactions.
     The forms use Flask-WTF for form handling and validation.
 
 Usage:
