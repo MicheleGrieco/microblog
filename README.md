@@ -14,6 +14,10 @@ This mini-app demonstrates how to:
 * Display user profile pages with avatars (via Gravatar)
 * Edit user profile (username and "about me" field)
 * Show example posts on the home and user pages (currently hardcoded)
+* Track last seen time for users
+* Error handling with custom 404 and 500 pages
+* Docker support for containerized deployment
+* Unit tests for models
 
 ---
 
@@ -79,6 +83,7 @@ microblog/
 ├── Dockerfile                 # Docker support
 ├── microblog.py               # WSGI entry point
 ├── requirements.txt           # Python dependencies
+├── tests.py                   # Unit tests for models
 └── README.md                  # Project documentation
 ```
 
@@ -117,6 +122,17 @@ microblog/
 
 ---
 
+## Running Tests
+
+To run the unit tests:
+
+```bash
+python -m unittest tests.py
+pytest tests.py # Alternative with pytest installed
+```
+
+---
+
 ## Current Features
 
 * User registration with unique email and username validation
@@ -125,6 +141,10 @@ microblog/
 * Example posts shown on the home page (currently hardcoded)
 * User profile pages at `/user/<username>` with Gravatar avatar and last seen info
 * Edit profile page for the logged-in user
+* Track last seen time for users
+* Custom error pages (404 and 500)
+* Docker support for containerized deployment
+* Unit tests for user and post models
 * HTML templates with Jinja2
 
 ---
@@ -136,7 +156,7 @@ microblog/
 * No pagination or search features
 * No deployment configuration for production
 
---
+---
 
 ## Main Dependencies
 
