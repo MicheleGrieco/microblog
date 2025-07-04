@@ -18,33 +18,35 @@ from flask_login import current_user, login_user, login_required, logout_user
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, EmptyForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, EmptyForm
+from app.models import User, Post
 
 
 # View functions
-@app.route('/') # Decorator, used to register functions as callbacks for certain events
-@app.route('/index') # Same as the above
+@app.route('/', methods=['GET', 'POST']) # Decorator, used to register functions as callbacks for certain events
+@app.route('/index', methods=['GET', 'POST']) # Another decorator
 @login_required
 def index():
     """
     The main page of the application, which is only accessible to logged-in users.
-    It displays a list of posts, which are currently hardcoded.
+    It displays a form for creating new posts and a list of existing posts.
     :return: Rendered HTML template for the index page.
     :rtype: str
     :raises: None
     """
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html', title='Home', posts=posts)
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post()
+        post.body = form.post.data # type: ignore
+        post.author = current_user # type: ignore
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        # Redirect to the index page after form submission
+        # This is a good practice to avoid resubmission of the form on page refresh
+        return redirect(url_for('index'))
+    posts = db.session.scalars(current_user.following_posts()).all()
+    return render_template('index.html', title='Home Page', form=form, posts=posts)
 
 
 @app.route('/login', methods=['GET', 'POST']) # Yet another decorator, which overwrites default GET allowance
@@ -240,3 +242,4 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
+    
