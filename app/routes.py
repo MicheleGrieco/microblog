@@ -13,8 +13,7 @@ Usage:
 """
 
 import sqlalchemy as sa
-from flask import render_template, flash, redirect, url_for
-from flask import request
+from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, login_required, logout_user
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
@@ -23,7 +22,7 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, Em
 from app.models import User, Post
 
 
-# View functions
+
 @app.route('/', methods=['GET', 'POST']) # Decorator, used to register functions as callbacks for certain events
 @app.route('/index', methods=['GET', 'POST']) # Another decorator
 @login_required
@@ -188,6 +187,7 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
+
 @app.route('/follow/<username>', methods=['POST'])
 @login_required
 def follow(username):
@@ -266,3 +266,4 @@ def explore():
         if posts.has_prev else None
     return render_template('index.html', title='Explore', posts=posts.items, 
                            next_url=next_url, prev_url=prev_url)
+    
