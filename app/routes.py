@@ -4,7 +4,8 @@ Author: Michele Grieco
 Created: 2025-06-12
 Description:
     This module contains the view functions for the Flask application.
-    It handles user authentication, registration, profile editing, and following/unfollowing users.
+    It handles routing, user authentication, and rendering of HTML templates,
+    as well as managing user interactions such as login, registration, profile editing, and post creation.
 
 Usage:
     This module is imported by the main application and is used to define the routes and their corresponding view functions.
