@@ -80,7 +80,8 @@ def login():
         login_user(user, remember=form.remember_me.data)
         # Check for "next" URL args, then redirect to them
         next_page = request.args.get('next')
-        if not next_page or urlsplit(next_page).netloc != '': # check if URL is relative or not
+        # Check if URL is relative or not
+        if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
@@ -114,7 +115,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         # Create the user with username, email and password
-        # Add it to the database
+        # Add it to the database and commit
         user = User()
         user.username=str(form.username.data)
         user.email=str(form.email.data)
@@ -126,7 +127,7 @@ def register():
     return render_template('register.html', title='Register', form=form)
         
         
-@app.route('/user/<username>') # Dynamic decorator
+@app.route('/user/<username>') # Dynamic decorator, accepts username as str
 @login_required
 def user(username):
     """
@@ -161,7 +162,7 @@ def before_request():
     """
     if current_user.is_authenticated:
         current_user.last_seen = datetime.now(timezone.utc)
-        db.session.commit() # no db.session.add() needed, since the user is already in the session
+        db.session.commit() # no db.session.add() needed, since the current user is already in the session
         
         
 @app.route('/edit_profile', methods=['GET', 'POST'])
