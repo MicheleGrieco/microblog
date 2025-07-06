@@ -13,8 +13,10 @@ This mini-app demonstrates how to:
 * Display flash messages and form validation
 * Display user profile pages with avatars (via Gravatar)
 * Edit user profile (username and "about me" field)
-* Show example posts on the home and user pages (currently hardcoded)
+* Show posts on the home and user pages (with pagination)
 * Track last seen time for users
+* Follow and unfollow other users
+* Explore all posts from all users
 * Error handling with custom 404 and 500 pages
 * Docker support for containerized deployment
 * Unit tests for models
@@ -63,9 +65,9 @@ microblog/
 ├── app/
 │   ├── __init__.py            # Flask app, db, login manager initialization
 │   ├── errors.py              # Error handlers
-│   ├── forms.py               # Login, registration, and edit profile forms (Flask-WTF)
+│   ├── forms.py               # Login, registration, edit profile, and post forms
 │   ├── models.py              # User and Post models (SQLAlchemy)
-│   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile
+│   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile, follow/unfollow, explore
 │   └── templates/
 │       ├── _post.html
 │       ├── 404.html
@@ -138,10 +140,13 @@ pytest tests.py # Alternative with pytest installed
 * User registration with unique email and username validation
 * Login/logout with user session management
 * Flash message display
-* Example posts shown on the home page (currently hardcoded)
-* User profile pages at `/user/<username>` with Gravatar avatar and last seen info
+* Create and display posts (persisted in the database)
+* User profile pages at `/user/<username>` with Gravatar avatar, about me, and last seen info
 * Edit profile page for the logged-in user
 * Track last seen time for users
+* Follow and unfollow other users
+* Explore page to view all posts from all users
+* Pagination for posts on home, user, and explore pages
 * Custom error pages (404 and 500)
 * Docker support for containerized deployment
 * Unit tests for user and post models
@@ -151,9 +156,7 @@ pytest tests.py # Alternative with pytest installed
 
 ## Limitations
 
-* Posts are not yet stored in the database; only hardcoded examples are shown
-* No post creation or editing functionality yet
-* No pagination or search features
+* No post editing or deletion functionality yet
 * No deployment configuration for production
 
 ---
@@ -171,10 +174,9 @@ pytest tests.py # Alternative with pytest installed
 
 ## Next Steps
 
-* Add the ability to create new posts in the database
-* Display real posts from the database on the home and user pages
+* Add the ability to edit and delete posts
 * Improve user profile management (e.g., allow avatar upload)
-* Add post pagination
+* Add post search functionality
 * Prepare for deployment to a production server
 
 ---
