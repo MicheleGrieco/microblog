@@ -6,3 +6,4 @@ flask_migrate
 flask-login
 email-validator
 pytest
+flask-mail
