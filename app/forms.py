@@ -95,6 +95,23 @@ class RegistrationForm(FlaskForm):
         
 
 class EditProfileForm(FlaskForm):
+    """
+    Form for editing user profile.
+    This form includes fields for username and about me section.
+    It uses Flask-WTF for form handling and validation.
+    Attributes:
+        username (StringField): The username field for editing the profile.
+        about_me (TextAreaField): A text area for the user to write about themselves.
+        submit (SubmitField): Submit button to save the profile changes.
+    Validators:
+        DataRequired: Ensures that the username field is not empty.
+        Length: Validates the length of the about me section (maximum 140 characters).
+    Usage:
+        This form is used in the profile editing view to allow users to update their profile information.
+        It is rendered in the profile template and handles user input validation.
+    :param FlaskForm: Base class for Flask-WTF forms.
+    :type FlaskForm: class
+    """
     username = StringField('Username', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
     submit = SubmitField('Submit')
