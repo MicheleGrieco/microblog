@@ -20,12 +20,50 @@ from app import db
 from app.models import User
 
 class LoginForm(FlaskForm):
+    """
+    Form for user login.
+    This form includes fields for username, password, and a remember me option.
+    It uses Flask-WTF for form handling and validation.
+    Attributes:
+        username (StringField): The username field for user login.
+        password (PasswordField): The password field for user login.
+        remember_me (BooleanField): Checkbox to remember the user on the device.
+        submit (SubmitField): Submit button to log in the user.
+    Validators:
+        DataRequired: Ensures that the username and password fields are not empty.
+    Usage:
+        This form is used in the login view to authenticate users.
+        It is rendered in the login template and handles user input validation.
+    :param FlaskForm: Base class for Flask-WTF forms.
+    :type FlaskForm: class
+    """
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
     
 class RegistrationForm(FlaskForm):
+    """
+    Form for user registration.
+    This form includes fields for username, email, password, and password confirmation.
+    It uses Flask-WTF for form handling and validation.
+    Attributes:
+        username (StringField): The username field for user registration.
+        email (StringField): The email field for user registration.
+        password (PasswordField): The password field for user registration.
+        password2 (PasswordField): Confirmation field for the password.
+        submit (SubmitField): Submit button to register the user.
+    Validators:
+        DataRequired: Ensures that the username, email, and password fields are not empty.
+        Email: Validates that the email field contains a valid email address.
+        EqualTo: Ensures that the password confirmation matches the password.
+    Usage:
+        This form is used in the registration view to create new users.
+        It is rendered in the registration template and handles user input validation.
+    :param FlaskForm: Base class for Flask-WTF forms.
+    :type FlaskForm: class
+    :raises ValidationError: If the username or email already exists in the database.
+    """
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -34,11 +72,23 @@ class RegistrationForm(FlaskForm):
     
     # Custom validators (validate_<attribute> pattern)
     def validate_username(self, username):
+        """
+        Validate that the username is unique in the database.
+        Raises ValidationError if the username already exists.
+        :param username: The username field to validate.
+        :raises ValidationError: If the username already exists.
+        """
         user = db.session.scalar(sa.select(User).where(User.username == username.data))
         if user is not None:
             raise ValidationError('Please use a different username.')
         
     def validate_email(self, email):
+        """
+        Validate that the email is unique in the database.
+        Raises ValidationError if the email already exists.
+        :param email: The email field to validate.
+        :raises ValidationError: If the email already exists.
+        """
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email address.')
@@ -50,10 +100,23 @@ class EditProfileForm(FlaskForm):
     submit = SubmitField('Submit')
     
     def __init__(self, original_username, *args, **kwargs):
+        """
+        Initialize the form with the original username to validate against.
+        :param original_username: The original username to compare against.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional keyword arguments.
+        :raises: ValidationError if the new username is already taken.
+        """
         super().__init__(*args, **kwargs)
         self.original_username = original_username
         
     def validate_username(self, username):
+        """
+        Validate that the username is unique in the database, excluding the original username.
+        Raises ValidationError if the username already exists.
+        :param username: The username field to validate.
+        :raises ValidationError: If the username already exists.
+        """
         if username.data != self.original_username:
             user = db.session.scalar(sa.select(User).where(User.username == username.data))
             if user is not None:
