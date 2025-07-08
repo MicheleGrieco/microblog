@@ -258,6 +258,13 @@ def unfollow(username):
 @app.route('/explore')
 @login_required
 def explore():
+    """
+    The explore page, which displays a list of all posts in the application.
+    It allows users to discover new content and interact with posts from other users.
+    :return: Rendered HTML template for the explore page.
+    :rtype: str
+    :raises: None
+    """
     page = request.args.get('page', 1, type=int)
     query = sa.select(Post).order_by(Post.timestamp.desc())
     posts = db.paginate(query, page=page, per_page=app.config['POSTS_PER_PAGE'] ,error_out=False)
@@ -271,6 +278,14 @@ def explore():
     
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
+    """
+    The password reset request page, which allows users to request a password reset.
+    If the user is already logged in, they are redirected to the index page.
+    If the reset password request form is submitted and valid, an email is sent to the user with instructions to reset their password.
+    :return: Rendered HTML template for the reset password request page or a redirect to the login page.
+    :rtype: str
+    :raises: None
+    """
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = ResetPasswordRequestForm()
