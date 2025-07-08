@@ -124,11 +124,43 @@ class EditProfileForm(FlaskForm):
             
 
 class PostForm(FlaskForm):
+    """
+    Form for creating or editing a post.
+    This form includes a text area for the post content and a submit button.
+    It uses Flask-WTF for form handling and validation.
+    Attributes:
+        post (TextAreaField): The text area field for the post content.
+        submit (SubmitField): Submit button to create or edit the post.
+    Validators:
+        DataRequired: Ensures that the post field is not empty.
+        Length: Validates the length of the post content (minimum 1 character, maximum 140 characters).
+    Usage:
+        This form is used in the post creation and editing views to handle user input.
+        It is rendered in the post template and handles validation for the post content.
+    :param FlaskForm: Base class for Flask-WTF forms.
+    :type FlaskForm: class
+    """
     post = TextAreaField('Say something', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
     
 
 class ResetPasswordRequestForm(FlaskForm):
+    """
+    Form for requesting a password reset.
+    This form includes a field for the user's email address.
+    It uses Flask-WTF for form handling and validation.
+    Attributes:
+        email (StringField): The email field for requesting a password reset.
+        submit (SubmitField): Submit button to request the password reset.
+    Validators:
+        DataRequired: Ensures that the email field is not empty.
+        Email: Validates that the email field contains a valid email address.
+    Usage:
+        This form is used in the password reset request view to collect the user's email.
+        It is rendered in the password reset request template and handles user input validation.
+    :param FlaskForm: Base class for Flask-WTF forms.
+    :type FlaskForm: class
+    """
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')
             
