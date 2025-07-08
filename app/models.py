@@ -104,12 +104,31 @@ class User(UserMixin, db.Model):
                 return False
     
     def get_reset_password_token(self, expires_in=600):
+        """
+        Generates a JWT token for resetting the user's password.
+        The token includes the user's ID and an expiration time.
+        :param expires_in: The number of seconds until the token expires (default is 600 seconds).
+        :type expires_in: int
+        :return: A JWT token that can be used to reset the user's password.
+        :rtype: str
+        :example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNldF9wYXNzd29yZCI6MSwiZXhwIjoxNjE2MjY4MDAwfQ.abc123'
+        :note: The token is signed with the application's secret key and uses the HS256 algorithm
+        :see: https://jwt.io/
+        """
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             app.config['SECRET_KEY'], algorithm='HS256')
         
     @staticmethod
     def verify_reset_password_token(token):
+        """
+        Verifies a JWT token for resetting the user's password.
+        This method decodes the token and retrieves the user ID from it.
+        :param token: The JWT token to verify.
+        :type token: str
+        :return: The User object if the token is valid, None otherwise.
+        :rtype: User or None
+        """
         try:
             id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
         except:
