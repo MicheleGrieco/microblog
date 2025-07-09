@@ -18,7 +18,7 @@ from flask_login import current_user, login_user, login_required, logout_user
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, EmptyForm, ResetPasswordRequestForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User, Post
 from app.email import send_password_reset_email
 
@@ -298,3 +298,31 @@ def reset_password_request():
         flash('Check your email for the instructions to reset your password')
         return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Reset Password', form=form)
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """
+    The password reset page, which allows users to reset their password using a token sent to their email.
+    If the user is already logged in, they are redirected to the index page.
+    If the token is invalid or expired, the user is redirected to the index page.
+    If the reset password form is submitted and valid, the user's password is updated in the database
+    and a success message is displayed.
+    :param token: The token used to verify the password reset request.
+    :type token: str
+    :return: Rendered HTML template for the reset password page or a redirect to the login
+    :rtype: str
+    :raises: None
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)
