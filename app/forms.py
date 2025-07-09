@@ -183,6 +183,23 @@ class ResetPasswordRequestForm(FlaskForm):
             
 
 class ResetPasswordForm(FlaskForm):
+    """
+    Form for resetting the password.
+    This form includes fields for the new password and password confirmation.
+    It uses Flask-WTF for form handling and validation.
+    Attributes:
+        password (PasswordField): The new password field for resetting the password.
+        password2 (PasswordField): Confirmation field for the new password.
+        submit (SubmitField): Submit button to reset the password.
+    Validators:
+        DataRequired: Ensures that the password and confirmation fields are not empty.
+        EqualTo: Ensures that the confirmation password matches the new password.
+    Usage:
+        This form is used in the password reset view to allow users to set a new password.
+        It is rendered in the password reset template and handles user input validation.
+    :param FlaskForm: Base class for Flask-WTF forms.
+    :type FlaskForm: class
+    """
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Request Password Reset')
