@@ -3,7 +3,7 @@ Module Name: email.py
 Author: Michele Grieco
 Created: 2025-07-07
 Description:
-    This module provides functionality to send emails using Flask-Mail.q 
+    This module provides functionality to send emails using Flask-Mail.
     It includes functions to send emails asynchronously, send a password reset email,
     and render email templates. The email sending is done in a separate thread to avoid blocking
     the main application thread, allowing for a smoother user experience.
