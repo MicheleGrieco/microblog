@@ -1,3 +1,19 @@
+"""
+Module Name: tests.py
+Author: Michele Grieco
+Created: 2025-07-02
+Description:
+    This module contains unit tests for the User model in a Flask application.
+    It tests functionalities such as password hashing, avatar generation, following and unfollowing users,
+    and retrieving posts from followed users.
+    The tests are run using the unittest framework, and the database is set up and torn down for each test case.
+
+Usage:
+    This module is intended to be run as a standalone script to execute the tests.
+    It uses the unittest framework to run the tests defined in the UserModelCase class.
+    The tests ensure that the User model behaves as expected, including password management and user relationships.
+"""
+
 import os
 
 # By setting the environment variable DATABASE_URL to 'sqlite://', we can use SQLite for testing.
