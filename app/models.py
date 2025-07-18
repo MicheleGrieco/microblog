@@ -52,7 +52,7 @@ class User(UserMixin, db.Model):
                                                             secondaryjoin=(followers.c.follower_id == id),
                                                             back_populates='following')
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Returns a string that includes the username of the user.
         This method is called when the object is printed or logged.
@@ -65,7 +65,7 @@ class User(UserMixin, db.Model):
         """
         return '<User {}>'.format(self.username)
     
-    def avatar(self, size):
+    def avatar(self, size) -> str:
         """
         Generates a Gravatar URL for the user based on their email address.
         :param size: The size of the avatar image in pixels.
@@ -89,7 +89,7 @@ class User(UserMixin, db.Model):
         """
         self.password_hash = generate_password_hash(password)
         
-    def check_password(self, password):
+    def check_password(self, password) -> bool:
         """
         Checks if the provided password matches the stored hashed password.
         This method is used to verify a user's password during login.
@@ -103,7 +103,7 @@ class User(UserMixin, db.Model):
             case _:
                 return False
     
-    def get_reset_password_token(self, expires_in=600):
+    def get_reset_password_token(self, expires_in=600) -> str:
         """
         Generates a JWT token for resetting the user's password.
         The token includes the user's ID and an expiration time.
@@ -120,7 +120,7 @@ class User(UserMixin, db.Model):
             app.config['SECRET_KEY'], algorithm='HS256')
         
     @staticmethod
-    def verify_reset_password_token(token):
+    def verify_reset_password_token(token) -> Optional['User']:
         """
         Verifies a JWT token for resetting the user's password.
         This method decodes the token and retrieves the user ID from it.
@@ -135,7 +135,7 @@ class User(UserMixin, db.Model):
             return
         return db.session.get(User, id)
     
-    def is_following(self, user):
+    def is_following(self, user) -> bool:
         """
         Checks if the user is following another user.
         :param user: The user to check if the current user is following.
@@ -170,7 +170,7 @@ class User(UserMixin, db.Model):
         if self.is_following(user):
             self.following.remove(user)        
     
-    def followers_count(self):
+    def followers_count(self) -> Optional[int]:
         """
         Returns the number of followers for the user.
         This method counts the number of users who are following the current user.
@@ -181,10 +181,11 @@ class User(UserMixin, db.Model):
         """
         # Whenever a query is included as part of a larger query,
         # SQLAlchemy requires the inner query to be converted to a sub-query by calling the subquery() method.
+        # SELECT COUNT(*) FROM followers WHERE following.follower_id = self.id
         query = sa.select(sa.func.count()).select_from(self.followers.select().subquery())
         return db.session.scalar(query)
     
-    def following_count(self):
+    def following_count(self) -> Optional[int]:
         """
         Returns the number of users that the current user is following.
         This method counts the number of users that the current user is following.
@@ -195,10 +196,11 @@ class User(UserMixin, db.Model):
         """
         # Whenever a query is included as part of a larger query,
         # SQLAlchemy requires the inner query to be converted to a sub-query by calling the subquery() method.
+        # SELECT COUNT(*) FROM following WHERE following.follower_id = self.id
         query = sa.select(sa.func.count()).select_from(self.following.select().subquery())
         return db.session.scalar(query)
     
-    def following_posts(self):
+    def following_posts(self) -> sa.sql.Select:
         """
         Returns a query that retrieves posts from users that the current user is following,
         as well as posts authored by the current user.
@@ -227,7 +229,7 @@ class Post(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     author: so.Mapped[User] = so.relationship(back_populates='posts')
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Returns a string that includes the body of the post.
         This method is called when the object is printed or logged.
@@ -242,7 +244,7 @@ class Post(db.Model):
     
     
 @login.user_loader
-def load_user(id):
+def load_user(id) -> Optional[User]:
     """
     Loads a user from the database by their ID.
     The id can be an integer or a string, and it will be converted to an integer.
