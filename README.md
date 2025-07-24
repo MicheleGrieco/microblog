@@ -150,7 +150,7 @@ pytest tests.py # Alternative with pytest installed
 * Custom error pages (404 and 500)
 * Docker support for containerized deployment
 * Unit tests for user and post models
-* HTML templates with Jinja2
+* HTML templates with Jinja2 and Bootstrap
 
 ---
 
@@ -187,3 +187,4 @@ pytest tests.py # Alternative with pytest installed
 * [SQLAlchemy documentation](https://www.sqlalchemy.org/)
 * [Flask-Login documentation](https://flask-login.readthedocs.io/en/latest/)
 * [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+* [Bootstrap documentation](https://getbootstrap.com/)
