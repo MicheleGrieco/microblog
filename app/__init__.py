@@ -22,6 +22,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate # Flask wrapper for Alembic, a database migration framework for SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_moment import Moment
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -29,6 +30,7 @@ db = SQLAlchemy(app) # Database instance
 migrate = Migrate(app, db) # Database migration engine
 login = LoginManager(app)
 mail = Mail(app)
+moment = Moment(app)
 
 # Endpoint for login view
 login.login_view = 'login' # type: ignore
