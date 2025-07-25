@@ -184,8 +184,9 @@ pytest tests.py # Alternative with pytest installed
 ## Useful Links
 
 * [Flask documentation](https://flask.palletsprojects.com/en/stable/)
+* [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 * [SQLAlchemy documentation](https://www.sqlalchemy.org/)
 * [Flask-Login documentation](https://flask-login.readthedocs.io/en/latest/)
-* [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 * [Bootstrap documentation](https://getbootstrap.com/)
 * [Moment.js documentation](https://momentjs.com/)
+* [Flask-Babel documentation](https://python-babel.github.io/flask-babel/)
