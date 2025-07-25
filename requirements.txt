@@ -8,3 +8,4 @@ email-validator
 pytest
 flask-mail
 pyjwt
+flask-moment
