@@ -188,3 +188,4 @@ pytest tests.py # Alternative with pytest installed
 * [Flask-Login documentation](https://flask-login.readthedocs.io/en/latest/)
 * [Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
 * [Bootstrap documentation](https://getbootstrap.com/)
+* [Moment.js documentation](https://momentjs.com/)
