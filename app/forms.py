@@ -14,6 +14,7 @@ Usage:
 
 import sqlalchemy as sa
 from flask_wtf import FlaskForm
+from flask_babel import _, lazy_gettext as _l
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, DataRequired, Email, EqualTo, Length
 from app import db
@@ -37,10 +38,10 @@ class LoginForm(FlaskForm):
     :param FlaskForm: Base class for Flask-WTF forms.
     :type FlaskForm: class
     """
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+    username = StringField(_l('Username'), validators=[DataRequired()]) #type: ignore
+    password = PasswordField(_l('Password'), validators=[DataRequired()]) #type: ignore
+    remember_me = BooleanField(_l('Remember Me')) #type: ignore
+    submit = SubmitField(_l('Sign In')) #type: ignore
     
 class RegistrationForm(FlaskForm):
     """
@@ -64,11 +65,11 @@ class RegistrationForm(FlaskForm):
     :type FlaskForm: class
     :raises ValidationError: If the username or email already exists in the database.
     """
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    username = StringField(_l('Username'), validators=[DataRequired()]) #type: ignore
+    email = StringField(_l('Email'), validators=[DataRequired(), Email()]) #type: ignore
+    password = PasswordField(_l('Password'), validators=[DataRequired()]) #type: ignore 
+    password2 = PasswordField(_l('Repeat Password'), validators=[DataRequired(), EqualTo('password')]) #type: ignore
+    submit = SubmitField(_l('Register')) #type: ignore
     
     # Custom validators (validate_<attribute> pattern)
     def validate_username(self, username):
@@ -80,7 +81,7 @@ class RegistrationForm(FlaskForm):
         """
         user = db.session.scalar(sa.select(User).where(User.username == username.data))
         if user is not None:
-            raise ValidationError('Please use a different username.')
+            raise ValidationError(_l('Please use a different username.')) #type: ignore
         
     def validate_email(self, email):
         """
@@ -91,7 +92,7 @@ class RegistrationForm(FlaskForm):
         """
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
-            raise ValidationError('Please use a different email address.')
+            raise ValidationError(_l('Please use a different email address.')) #type: ignore
         
 
 class EditProfileForm(FlaskForm):
@@ -112,9 +113,9 @@ class EditProfileForm(FlaskForm):
     :param FlaskForm: Base class for Flask-WTF forms.
     :type FlaskForm: class
     """
-    username = StringField('Username', validators=[DataRequired()])
-    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
-    submit = SubmitField('Submit')
+    username = StringField(_l('Username'), validators=[DataRequired()]) #type: ignore
+    about_me = TextAreaField(_l('About me'), validators=[Length(min=0, max=140)]) #type: ignore
+    submit = SubmitField(_l('Submit')) #type: ignore
     
     def __init__(self, original_username, *args, **kwargs):
         """
@@ -137,7 +138,7 @@ class EditProfileForm(FlaskForm):
         if username.data != self.original_username:
             user = db.session.scalar(sa.select(User).where(User.username == username.data))
             if user is not None:
-                raise ValidationError('Please use a different username.')
+                raise ValidationError(_l('Please use a different username.')) #type: ignore
             
 
 class PostForm(FlaskForm):
@@ -157,8 +158,8 @@ class PostForm(FlaskForm):
     :param FlaskForm: Base class for Flask-WTF forms.
     :type FlaskForm: class
     """
-    post = TextAreaField('Say something', validators=[DataRequired(), Length(min=1, max=140)])
-    submit = SubmitField('Submit')
+    post = TextAreaField(_l('Say something'), validators=[DataRequired(), Length(min=1, max=140)]) #type: ignore
+    submit = SubmitField(_l('Submit')) #type: ignore
     
 
 class ResetPasswordRequestForm(FlaskForm):
@@ -178,8 +179,8 @@ class ResetPasswordRequestForm(FlaskForm):
     :param FlaskForm: Base class for Flask-WTF forms.
     :type FlaskForm: class
     """
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Request Password Reset')
+    email = StringField(_l('Email'), validators=[DataRequired(), Email()]) #type: ignore
+    submit = SubmitField(_l('Request Password Reset')) #type: ignore
             
 
 class ResetPasswordForm(FlaskForm):
@@ -200,9 +201,9 @@ class ResetPasswordForm(FlaskForm):
     :param FlaskForm: Base class for Flask-WTF forms.
     :type FlaskForm: class
     """
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Request Password Reset')
+    password = PasswordField(_l('Password'), validators=[DataRequired()]) #type: ignore
+    password2 = PasswordField(_l('Repeat Password'), validators=[DataRequired(), EqualTo('password')]) #type: ignore
+    submit = SubmitField(_l('Request Password Reset')) #type: ignore
             
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')

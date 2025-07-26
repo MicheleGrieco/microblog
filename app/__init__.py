@@ -23,7 +23,7 @@ from flask_migrate import Migrate # Flask wrapper for Alembic, a database migrat
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_moment import Moment
-from flask_babel import Babel
+from flask_babel import Babel, lazy_gettext as _l
 
 def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
@@ -39,6 +39,7 @@ babel = Babel(app, locale_selector=get_locale)
 
 # Endpoint for login view
 login.login_view = 'login' # type: ignore
+login.login_message = _l('Please log in to access this page.') #type: ignore
 
 # Email logger enabled only when app is running without debug mode
 if not app.debug:
