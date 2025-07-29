@@ -26,7 +26,8 @@ from flask_moment import Moment
 from flask_babel import Babel, lazy_gettext as _l
 
 def get_locale():
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    # return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return 'es'
 
 app = Flask(__name__)
 app.config.from_object(Config)
