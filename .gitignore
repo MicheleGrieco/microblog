@@ -83,6 +83,9 @@ gunicorn.pid
 # Local server metadata
 *.pid
 
+# Babel
+.pot
+
 # Node (if using front-end stuff)
 node_modules/
 npm-debug.log
