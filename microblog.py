@@ -17,6 +17,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 # A Python script at the top-level that defines the Flask application instance.
 from app import app, db # A single line that imports the application instance and the database
+from app import cli
 from app.models import User, Post
 
 @app.shell_context_processor
