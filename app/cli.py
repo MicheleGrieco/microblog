@@ -18,7 +18,7 @@ def update():
     
 @translate.command()
 def compile():
-    """"Compile all languages."""
+    """Compile all languages."""
     if os.system('pybabel compile -d app/translations'):
         raise RuntimeError('compile command failed')
     
