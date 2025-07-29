@@ -190,3 +190,4 @@ pytest tests.py # Alternative with pytest installed
 * [Bootstrap documentation](https://getbootstrap.com/)
 * [Moment.js documentation](https://momentjs.com/)
 * [Flask-Babel documentation](https://python-babel.github.io/flask-babel/)
+* [Click documentation](https://click.palletsprojects.com/en/stable/)
