@@ -72,7 +72,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(_l('Register')) #type: ignore
     
     # Custom validators (validate_<attribute> pattern)
-    def validate_username(self, username):
+    def validate_username(self, username) -> None:
         """
         Validate that the username is unique in the database.
         Raises ValidationError if the username already exists.
@@ -83,7 +83,7 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError(_l('Please use a different username.')) #type: ignore
         
-    def validate_email(self, email):
+    def validate_email(self, email) -> None:
         """
         Validate that the email is unique in the database.
         Raises ValidationError if the email already exists.
@@ -128,7 +128,7 @@ class EditProfileForm(FlaskForm):
         super().__init__(*args, **kwargs)
         self.original_username = original_username
         
-    def validate_username(self, username):
+    def validate_username(self, username) -> None:
         """
         Validate that the username is unique in the database, excluding the original username.
         Raises ValidationError if the username already exists.
