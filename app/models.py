@@ -79,7 +79,7 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest() # needs to be lowercase and encoded in utf-8
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}' # 'd' is the default image type, 's' is the size of the image
     
-    def set_password(self, password):
+    def set_password(self, password) -> None:
         """
         Sets the password for the user by hashing it.
         This method uses a secure hashing algorithm to store the password securely.
@@ -146,7 +146,7 @@ class User(UserMixin, db.Model):
         query = self.following.select().where(User.id == user.id)
         return db.session.scalar(query) is not None
     
-    def follow(self, user):
+    def follow(self, user) -> None:
         """
         Follows another user.
         This method adds the specified user to the current user's following list.
@@ -158,7 +158,7 @@ class User(UserMixin, db.Model):
         if not self.is_following(user):
             self.following.add(user)
             
-    def unfollow(self, user):
+    def unfollow(self, user) -> None:
         """
         Unfollows another user.
         This method removes the specified user from the current user's following list.
