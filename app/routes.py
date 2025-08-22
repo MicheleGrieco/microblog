@@ -22,6 +22,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, EmptyForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User, Post
 from app.email import send_password_reset_email
+from langdetect import detect, LangDetectException
 
 
 @app.route('/', methods=['GET', 'POST']) # Decorator, used to register functions as callbacks for certain events
@@ -37,9 +38,17 @@ def index():
     """
     form = PostForm()
     if form.validate_on_submit():
+        try:
+            # Each time a post is submitted, the detect function will try to determine its language.
+            language = detect(form.post.data)
+        except LangDetectException:
+            language = ''
+            
         post = Post()
         post.body = form.post.data # type: ignore
         post.author = current_user # type: ignore
+        post.language = language
+        
         db.session.add(post)
         db.session.commit()
         flash(_('Your post is now live!'))
