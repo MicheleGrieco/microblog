@@ -4,11 +4,11 @@ Author: Michele Grieco
 Created: 2025-06-19
 Description:
     This module defines the database models for the Flask application.
-    It includes the User and Post models, which represent users and their posts in the application.
-    The User model includes methods for password hashing and Gravatar avatar generation,
-    as well as methods for following and unfollowing other users.
-    The User model inherits from UserMixin to provide Flask-Login functionality.
-    The Post model represents user-generated content.
+    It includes the User and Post models, as well as the followers association table.
+    The User model represents a user in the application, with attributes such as username, email, password hash,
+    and relationships to posts and followers.
+    The Post model represents a post created by a user, with attributes such as body, timestamp, and author.
+    The models use SQLAlchemy for ORM (Object-Relational Mapping) and Flask-Login for user authentication.
 
 Usage:
     This module is imported by the main application and is used to define the database schema.
@@ -79,7 +79,7 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest() # needs to be lowercase and encoded in utf-8
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}' # 'd' is the default image type, 's' is the size of the image
     
-    def set_password(self, password):
+    def set_password(self, password) -> None:
         """
         Sets the password for the user by hashing it.
         This method uses a secure hashing algorithm to store the password securely.
@@ -146,7 +146,7 @@ class User(UserMixin, db.Model):
         query = self.following.select().where(User.id == user.id)
         return db.session.scalar(query) is not None
     
-    def follow(self, user):
+    def follow(self, user) -> None:
         """
         Follows another user.
         This method adds the specified user to the current user's following list.
@@ -158,7 +158,7 @@ class User(UserMixin, db.Model):
         if not self.is_following(user):
             self.following.add(user)
             
-    def unfollow(self, user):
+    def unfollow(self, user) -> None:
         """
         Unfollows another user.
         This method removes the specified user from the current user's following list.
