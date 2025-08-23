@@ -5,7 +5,7 @@ flask-sqlalchemy
 flask_migrate
 flask-login
 email-validator
-pytest
+pytest # python test suite
 flask-mail
 pyjwt
 flask-moment
