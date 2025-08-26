@@ -191,3 +191,4 @@ pytest tests.py # Alternative with pytest installed
 * [Moment.js documentation](https://momentjs.com/)
 * [Flask-Babel documentation](https://python-babel.github.io/flask-babel/)
 * [Click documentation](https://click.palletsprojects.com/en/stable/)
+* [Microsoft Translator documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/reference/v3/translate)
