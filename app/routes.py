@@ -23,6 +23,7 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, Em
 from app.models import User, Post
 from app.email import send_password_reset_email
 from langdetect import detect, LangDetectException
+from app.translate import translate
 
 
 @app.route('/', methods=['GET', 'POST']) # Decorator, used to register functions as callbacks for certain events
@@ -337,3 +338,17 @@ def reset_password(token):
         flash(_('Your password has been reset.'))
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+@app.route('/translate', methods=['POST'])
+@login_required
+def translate_text():
+    """
+    The translate route, which allows users to translate text from one language to another.
+    It accepts POST requests with JSON data containing the text to be translated, the source language,
+    and the destination language. It returns the translated text in JSON format.
+    :return: JSON response containing the translated text.
+    :rtype: dict
+    :raises: None
+    """
+    data = request.get_json()
+    return {'text': translate(data['text'], data['source_language'], data['dest_language'])}
