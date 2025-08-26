@@ -12,3 +12,4 @@ flask-moment
 flask-babel
 langdetect
 mypy # just a static type checker
+requests

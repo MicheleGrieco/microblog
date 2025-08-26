@@ -26,3 +26,4 @@ class Config:
     ADMINS = ['michelegrieco92@gmail.com']
     POSTS_PER_PAGE = 25
     LANGUAGES = ['en', 'es', 'it']
+    MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY') # export MS_TRANSLATOR_KEY=<paste_your_key> in .env file
