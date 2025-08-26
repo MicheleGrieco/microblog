@@ -28,4 +28,8 @@ def translate(text, source_language, dest_language):
     
     if r.status_code != 200:
         return _('Error: the translation service failed.')
+    # The JSON response is a list of translations,
+    # but since we are translating a single text
+    # we can get the first element and find the actual translated text
+    # within the translation structure.
     return r.json()[0]['translations'][0]['text']
