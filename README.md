@@ -4,20 +4,19 @@ Flask web application inspired by the [Flask Mega Tutorial](https://blog.miguelg
 
 ## Overview
 
-This mini-app demonstrates how to:
+This web application demonstrates:
 
-* Manage users with authentication (login/logout) and registration
-* Use Flask, Flask-WTF, Flask-Login, Flask-Migrate, and SQLAlchemy
-* Structure a Flask project with models, routes, and templates
-* Handle a relational database for users and posts
-* Display flash messages and form validation
-* Display user profile pages with avatars (via Gravatar)
+* User authentication (login/logout), registration, and password reset via email
+* User profile pages with Gravatar avatars, "about me" field, and last seen time
 * Edit user profile (username and "about me" field)
-* Show posts on the home and user pages (with pagination)
-* Track last seen time for users
+* Create, display, and paginate posts (persisted in the database)
 * Follow and unfollow other users
-* Explore all posts from all users
+* Explore page to view all posts from all users
+* Flash messages and form validation
 * Error handling with custom 404 and 500 pages
+* Internationalization (English, Spanish, Italian) with Flask-Babel
+* Post language detection and translation (Microsoft Translator API)
+* Responsive UI with Bootstrap and Moment.js for timestamps
 * Docker support for containerized deployment
 * Unit tests for models
 
@@ -27,6 +26,7 @@ This mini-app demonstrates how to:
 
 * Python 3.12+ installed
 * Basic familiarity with the terminal
+* (Optional) Docker installed for containerization
 
 ---
 
@@ -55,30 +55,54 @@ venv\Scripts\Activate.ps1      # On Windows PowerShell
 pip install -r requirements.txt
 ```
 
+### 4. Set environment variables (optional, for email and translation)
+
+Create a `.env` file or set variables in shell:
+
+```
+SECRET_KEY=your-secret-key
+MAIL_SERVER=smtp.example.com
+MAIL_PORT=587
+MAIL_USE_TLS=1
+MAIL_USERNAME=your-email@example.com
+MAIL_PASSWORD=your-email-password
+MS_TRANSLATOR_KEY=your-microsoft-translator-key
+```
+
 ---
 
 ## Project Structure
-
 
 ```
 microblog/
 ├── app/
 │   ├── __init__.py            # Flask app, db, login manager initialization
+│   ├── cli.py                 # Custom Flask CLI commands
+│   ├── email.py               # Email sending functions
 │   ├── errors.py              # Error handlers
 │   ├── forms.py               # Login, registration, edit profile, and post forms
 │   ├── models.py              # User and Post models (SQLAlchemy)
-│   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile, follow/unfollow, explore
+│   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile, follow/unfollow, explore, password reset
+│   ├── translate.py           # Microsoft Translator API integration
 │   └── templates/
 │       ├── _post.html
 │       ├── 404.html
 │       ├── 500.html
 │       ├── base.html
+│       ├── bootstrap_wtf.html
 │       ├── edit_profile.html
 │       ├── index.html
 │       ├── login.html
 │       ├── register.html
-│       └── user.html
-│   
+│       ├── reset_password_request.html
+│       ├── reset_password.html
+│       ├── user.html
+│       └── email/
+│           ├── reset_password.html
+│           └── reset_password.txt
+│   └── translations/
+│       ├── es/
+│       └── it/
 ├── migrations/
 ├── app.db                     # SQLite database file
 ├── config.py                  # App configuration
@@ -119,7 +143,6 @@ microblog/
 
    ```
    http://127.0.0.1:5000/
-   http://127.0.0.1:5000/index
    ```
 
 ---
@@ -135,22 +158,33 @@ pytest tests.py # Alternative with pytest installed
 
 ---
 
+## Docker Support
+
+To build and run the app in Docker:
+
+```bash
+docker build -t microblog .
+docker run -p 5000:5000 microblog
+```
+
+---
+
 ## Current Features
 
-* User registration with unique email and username validation
-* Login/logout with user session management
-* Flash message display
-* Create and display posts (persisted in the database)
-* User profile pages at `/user/<username>` with Gravatar avatar, about me, and last seen info
+* User registration, login/logout, and password reset via email
+* User profile pages with Gravatar avatar, about me, and last seen info
 * Edit profile page for the logged-in user
-* Track last seen time for users
+* Create, display, and paginate posts (persisted in the database)
 * Follow and unfollow other users
 * Explore page to view all posts from all users
-* Pagination for posts on home, user, and explore pages
+* Flash message display
+* Track last seen time for users
 * Custom error pages (404 and 500)
+* Internationalization (English, Spanish, Italian)
+* Post language detection and translation (Microsoft Translator API)
+* Responsive UI with Bootstrap and Moment.js
 * Docker support for containerized deployment
 * Unit tests for user and post models
-* HTML templates with Jinja2 and Bootstrap
 
 ---
 
@@ -169,6 +203,13 @@ pytest tests.py # Alternative with pytest installed
 * [Flask-Login](https://flask-login.readthedocs.io/)
 * [Flask-WTF](https://flask-wtf.readthedocs.io/)
 * [email-validator](https://pypi.org/project/email-validator/)
+* [Flask-Mail](https://pythonhosted.org/Flask-Mail/)
+* [Flask-Moment](https://flask-moment.readthedocs.io/)
+* [Flask-Babel](https://python-babel.github.io/flask-babel/)
+* [langdetect](https://pypi.org/project/langdetect/)
+* [requests](https://requests.readthedocs.io/)
+* [Bootstrap](https://getbootstrap.com/)
+* [Moment.js](https://momentjs.com/)
 
 ---
 
