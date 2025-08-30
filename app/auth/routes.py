@@ -5,14 +5,20 @@ from flask_babel import _
 import sqlalchemy as sa
 from app import db
 from app.auth import bp
-from app.auth.forms import LoginForm, RegistrationForm, \
-    ResetPasswordRequestForm, ResetPasswordForm
+from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
 from app.auth.email import send_password_reset_email
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    Handle user login.
+    If the user is already authenticated, redirect to the main index.
+    If the login form is submitted and valid, authenticate the user and
+    redirect to the next page or main index.
+    :return: Rendered login template or redirect response.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = LoginForm()
@@ -32,12 +38,23 @@ def login():
 
 @bp.route('/logout')
 def logout():
+    """
+    Log the user out and redirect to the main index.
+    :return: Redirect response to the main index.
+    """
     logout_user()
     return redirect(url_for('main.index'))
 
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    Handle user registration.
+    If the user is already authenticated, redirect to the main index.
+    If the registration form is submitted and valid, create a new user,
+    set their password, and commit to the database. Then redirect to the login page.
+    :return: Rendered registration template or redirect response.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = RegistrationForm()
@@ -54,6 +71,13 @@ def register():
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
+    """
+    Handle password reset requests.
+    If the user is already authenticated, redirect to the main index.
+    If the reset password request form is submitted and valid, send a password
+    reset email to the user if the email exists in the database. Then redirect to the login page.
+    :return: Rendered reset password request template or redirect response.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = ResetPasswordRequestForm()
@@ -71,6 +95,14 @@ def reset_password_request():
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
+    """
+    Handle password reset using a token.
+    If the user is already authenticated, redirect to the main index.
+    If the token is valid, allow the user to reset their password using the
+    reset password form. After successful password reset, redirect to the login page.
+    :param token: The password reset token.
+    :return: Rendered reset password template or redirect response.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     user = User.verify_reset_password_token(token)

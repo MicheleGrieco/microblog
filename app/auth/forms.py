@@ -24,12 +24,24 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(_l('Register'))
 
     def validate_username(self, username):
+        """
+        Validate that the username is unique.
+        :param username: The username field to validate.
+        :raise ValidationError: If the username is already taken.
+        :return: None
+        """
         user = db.session.scalar(sa.select(User).where(
             User.username == username.data))
         if user is not None:
             raise ValidationError(_('Please use a different username.'))
 
     def validate_email(self, email):
+        """
+        Validate that the email is unique.
+        :param email: The email field to validate.
+        :raise ValidationError: If the email is already registered.
+        :return: None
+        """
         user = db.session.scalar(sa.select(User).where(
             User.email == email.data))
         if user is not None:
@@ -43,7 +55,5 @@ class ResetPasswordRequestForm(FlaskForm):
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField(_l('Password'), validators=[DataRequired()])
-    password2 = PasswordField(
-        _l('Repeat Password'), validators=[DataRequired(),
-                                           EqualTo('password')])
+    password2 = PasswordField(_l('Repeat Password'), validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField(_l('Request Password Reset'))
