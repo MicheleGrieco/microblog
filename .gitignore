@@ -52,6 +52,7 @@ venv/
 ENV/
 env.bak/
 env/
+microblog.log*
 
 # Jupyter Notebooks
 .ipynb_checkpoints

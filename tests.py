@@ -1,80 +1,43 @@
-"""
-Module Name: tests.py
-Author: Michele Grieco
-Created: 2025-07-02
-Description:
-    This module contains unit tests for the User model in a Flask application.
-    It tests functionalities such as password hashing, avatar generation, following and unfollowing users,
-    and retrieving posts from followed users.
-    The tests are run using the unittest framework, and the database is set up and torn down for each test case.
-
-Usage:
-    This module is intended to be run as a standalone script to execute the tests.
-    It uses the unittest framework to run the tests defined in the UserModelCase class.
-    The tests ensure that the User model behaves as expected, including password management and user relationships.
-"""
-
-import os
-
-# By setting the environment variable DATABASE_URL to 'sqlite://', we can use SQLite for testing.
-# This is a common practice in Flask applications to switch between different databases for development and testing.
-os.environ['DATABASE_URL'] = 'sqlite://'
-
+#!/usr/bin/env python
 from datetime import datetime, timezone, timedelta
 import unittest
-from app import app, db
+from app import create_app, db
 from app.models import User, Post
+from config import Config
+
+
+class TestConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 
 class UserModelCase(unittest.TestCase):
     def setUp(self):
-        """
-        Create a new app context and initialize the database.
-        This method is called before each test to set up the environment.
-        It ensures that each test runs with a fresh database state.
-        The app context is pushed to allow access to the current application instance,
-        and the database is created with `db.create_all()`.
-        This is essential for testing models and their interactions with the database.      
-        """
-        self.app_context = app.app_context()
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-    
+
     def tearDown(self):
-        """
-        Remove the session and drop all tables in the database.
-        This method is called after each test to clean up the environment.
-        It ensures that the database is reset to its initial state after each test,
-        preventing any side effects from one test affecting another.
-        The session is removed to close any open connections, and `db.drop_all()` is called
-        to drop all tables created during the test.
-        """
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
-        
+
     def test_password_hashing(self):
-        u = User()
-        u.username = 'susan'
-        u.email = 'susan@example.com'
+        u = User(username='susan', email='susan@example.com')
         u.set_password('cat')
         self.assertFalse(u.check_password('dog'))
         self.assertTrue(u.check_password('cat'))
-        
+
     def test_avatar(self):
-        u = User()
-        u.username='john'
-        u.email='john@example.com'
+        u = User(username='john', email='john@example.com')
         self.assertEqual(u.avatar(128), ('https://www.gravatar.com/avatar/'
                                          'd4c74594d841139328695756648b6bd6'
                                          '?d=identicon&s=128'))
+
     def test_follow(self):
-        u1 = User()
-        u1.username='john'
-        u1.email='john@example.com'
-        u2 = User()
-        u2.username='susan' 
-        u2.email='susan@example.com'
+        u1 = User(username='john', email='john@example.com')
+        u2 = User(username='susan', email='susan@example.com')
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
@@ -82,7 +45,7 @@ class UserModelCase(unittest.TestCase):
         followers = db.session.scalars(u2.followers.select()).all()
         self.assertEqual(following, [])
         self.assertEqual(followers, [])
-        
+
         u1.follow(u2)
         db.session.commit()
         self.assertTrue(u1.is_following(u2))
@@ -92,63 +55,41 @@ class UserModelCase(unittest.TestCase):
         u2_followers = db.session.scalars(u2.followers.select()).all()
         self.assertEqual(u1_following[0].username, 'susan')
         self.assertEqual(u2_followers[0].username, 'john')
-        
+
         u1.unfollow(u2)
         db.session.commit()
         self.assertFalse(u1.is_following(u2))
         self.assertEqual(u1.following_count(), 0)
         self.assertEqual(u2.followers_count(), 0)
-        
-        
+
     def test_follow_posts(self):
-        # Create four users
-        u1 = User()
-        u1.username = 'john'
-        u1.email = 'john@example.com'
-        u2 = User()
-        u2.username = 'susan'
-        u2.email = 'susan@example.com'
-        u3 = User()
-        u3.username = 'mary' 
-        u3.email = 'mary@example.com'
-        u4 = User()
-        u4.username = 'david'
-        u4.email = 'david@example.com'
+        # create four users
+        u1 = User(username='john', email='john@example.com')
+        u2 = User(username='susan', email='susan@example.com')
+        u3 = User(username='mary', email='mary@example.com')
+        u4 = User(username='david', email='david@example.com')
         db.session.add_all([u1, u2, u3, u4])
-        
-        # Create four posts
+
+        # create four posts
         now = datetime.now(timezone.utc)
-        
-        p1 = Post()
-        p1.body = "post from john"
-        p1.author = u1
-        p1.timestamp = now + timedelta(seconds=1)
-        
-        p2 = Post()
-        p2.body = "post from susan"
-        p2.author = u2
-        p2.timestamp = now + timedelta(seconds=4)
-                  
-        p3 = Post()
-        p3.body = "post from mary"
-        p3.author = u3
-        p3.timestamp = now + timedelta(seconds=3)
-                  
-        p4 = Post()
-        p4.body = "post from david"
-        p4.author = u4
-        p4.timestamp = now + timedelta(seconds=2)
-        
+        p1 = Post(body="post from john", author=u1,
+                  timestamp=now + timedelta(seconds=1))
+        p2 = Post(body="post from susan", author=u2,
+                  timestamp=now + timedelta(seconds=4))
+        p3 = Post(body="post from mary", author=u3,
+                  timestamp=now + timedelta(seconds=3))
+        p4 = Post(body="post from david", author=u4,
+                  timestamp=now + timedelta(seconds=2))
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
-        
-        # Setup the followers
-        u1.follow(u2) # john follows susan
-        u1.follow(u4) # john follows david
-        u2.follow(u3) # susan follows mary
-        u3.follow(u4) # mary follows david
+
+        # setup the followers
+        u1.follow(u2)  # john follows susan
+        u1.follow(u4)  # john follows david
+        u2.follow(u3)  # susan follows mary
+        u3.follow(u4)  # mary follows david
         db.session.commit()
-        
+
         # check the following posts of each user
         f1 = db.session.scalars(u1.following_posts()).all()
         f2 = db.session.scalars(u2.following_posts()).all()
@@ -157,9 +98,8 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(f1, [p2, p4, p1])
         self.assertEqual(f2, [p2, p3])
         self.assertEqual(f3, [p3, p4])
-        self.assertEqual(f4, [p4, p4])
-        
-        return None
-    
-if __name__ == 'main':
+        self.assertEqual(f4, [p4])
+
+
+if __name__ == '__main__':
     unittest.main(verbosity=2)
