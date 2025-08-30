@@ -76,31 +76,42 @@ MS_TRANSLATOR_KEY=your-microsoft-translator-key
 ```
 microblog/
 ├── app/
-│   ├── __init__.py            # Flask app, db, login manager initialization
+│   ├── __init__.py            # Flask app initialization
 │   ├── cli.py                 # Custom Flask CLI commands
-│   ├── email.py               # Email sending functions
-│   ├── errors.py              # Error handlers
-│   ├── forms.py               # Login, registration, edit profile, and post forms
-│   ├── models.py              # User and Post models (SQLAlchemy)
-│   ├── routes.py              # Routes: index, login, logout, register, user profile, edit profile, follow/unfollow, explore, password reset
-│   ├── translate.py           # Microsoft Translator API integration
-│   └── templates/
-│       ├── _post.html
-│       ├── 404.html
-│       ├── 500.html
-│       ├── base.html
-│       ├── bootstrap_wtf.html
-│       ├── edit_profile.html
-│       ├── index.html
-│       ├── login.html
-│       ├── register.html
-│       ├── reset_password_request.html
-│       ├── reset_password.html
-│       ├── user.html
-│       └── email/
-│           ├── reset_password.html
-│           └── reset_password.txt
-│   └── translations/
+│   ├── email.py               # Email functionality
+│   ├── models.py              # Database models
+│   ├── translate.py           # Translation service
+│   ├── auth/                  # Authentication blueprint
+│   │   ├── __init__.py
+│   │   ├── email.py          # Password reset emails
+│   │   ├── forms.py          # Login/registration forms
+│   │   └── routes.py         # Auth routes
+│   ├── errors/               # Error handling blueprint
+│   │   ├── __init__.py
+│   │   └── handlers.py       # Error handlers
+│   ├── main/                 # Main application blueprint
+│   │   ├── __init__.py
+│   │   ├── forms.py         # Post and profile forms
+│   │   └── routes.py        # Main routes
+│   ├── static/
+│   │   └── loading.gif      # Loading animation
+│   ├── templates/
+│   │   ├── _post.html        # Post template
+│   │   ├── base.html         # Base template
+│   │   ├── bootstrap_wtf.html
+│   │   ├── edit_profile.html
+│   │   ├── index.html        # Homepage
+│   │   ├── user.html         # User profile
+│   │   ├── auth/
+│   │   │   ├── login.html
+│   │   │   ├── register.html
+│   │   │   └── reset_password.html
+│   │   ├── email/
+│   │   │   └── reset_password.html
+│   │   └── errors/
+│   │       ├── 404.html
+│   │       └── 500.html
+│   └── translations/          # i18n translations
 │       ├── es/
 │       └── it/
 ├── migrations/
@@ -171,20 +182,29 @@ docker run -p 5000:5000 microblog
 
 ## Current Features
 
-* User registration, login/logout, and password reset via email
-* User profile pages with Gravatar avatar, about me, and last seen info
-* Edit profile page for the logged-in user
-* Create, display, and paginate posts (persisted in the database)
-* Follow and unfollow other users
-* Explore page to view all posts from all users
-* Flash message display
-* Track last seen time for users
-* Custom error pages (404 and 500)
-* Internationalization (English, Spanish, Italian)
-* Post language detection and translation (Microsoft Translator API)
-* Responsive UI with Bootstrap and Moment.js
-* Docker support for containerized deployment
-* Unit tests for user and post models
+* User authentication (login/logout) with email/password
+* User registration with email validation
+* Password reset via email
+* User profiles with:
+  - Gravatar avatars
+  - "About me" section
+  - Last seen time tracking
+  - Follow/unfollow functionality
+* Posts system with:
+  - Creation and display
+  - Pagination (25 posts per page)
+  - Language detection
+  - Translation support via Microsoft Translator API
+* Multilanguage support (English, Spanish, Italian)
+* Error handling with custom 404 and 500 pages
+* Modular application structure with blueprints:
+  - auth: User authentication
+  - main: Core functionality
+  - errors: Error handling
+* Flask shell context for testing
+* Unit tests for User model
+* SQLite database with migrations
+* Bootstrap-based responsive UI
 
 ---
 
@@ -197,28 +217,36 @@ docker run -p 5000:5000 microblog
 
 ## Main Dependencies
 
-* [Flask](https://flask.palletsprojects.com/)
-* [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/)
-* [Flask-Migrate](https://flask-migrate.readthedocs.io/)
-* [Flask-Login](https://flask-login.readthedocs.io/)
-* [Flask-WTF](https://flask-wtf.readthedocs.io/)
-* [email-validator](https://pypi.org/project/email-validator/)
-* [Flask-Mail](https://pythonhosted.org/Flask-Mail/)
-* [Flask-Moment](https://flask-moment.readthedocs.io/)
-* [Flask-Babel](https://python-babel.github.io/flask-babel/)
-* [langdetect](https://pypi.org/project/langdetect/)
-* [requests](https://requests.readthedocs.io/)
-* [Bootstrap](https://getbootstrap.com/)
-* [Moment.js](https://momentjs.com/)
+* [Flask](https://flask.palletsprojects.com/) - Web framework
+* [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/) - Database ORM
+* [Flask-Migrate](https://flask-migrate.readthedocs.io/) - Database migrations
+* [Flask-Login](https://flask-login.readthedocs.io/) - User session management
+* [Flask-WTF](https://flask-wtf.readthedocs.io/) - Form handling
+* [Flask-Mail](https://pythonhosted.org/Flask-Mail/) - Email support
+* [Flask-Moment](https://flask-moment.readthedocs.io/) - Datetime handling
+* [Flask-Babel](https://python-babel.github.io/flask-babel/) - Internationalization
+* [PyJWT](https://pyjwt.readthedocs.io/) - JSON Web Tokens
+* [python-dotenv](https://github.com/theskumar/python-dotenv) - Environment variables
+* [email-validator](https://pypi.org/project/email-validator/) - Email validation
+* [langdetect](https://pypi.org/project/langdetect/) - Language detection
+* [requests](https://requests.readthedocs.io/) - HTTP client
+* [pytest](https://docs.pytest.org/) - Testing framework
+* [mypy](http://mypy-lang.org/) - Static type checking
 
 ---
 
 ## Next Steps
 
-* Add the ability to edit and delete posts
-* Improve user profile management (e.g., allow avatar upload)
+* Add post editing and deletion
 * Add post search functionality
-* Prepare for deployment to a production server
+* Add custom avatar upload
+* Add user notifications
+* Add API endpoints
+* Add CSRF protection
+* Add rate limiting
+* Configure production deployment
+* Add continuous integration/deployment
+* Improve test coverage
 
 ---
 
