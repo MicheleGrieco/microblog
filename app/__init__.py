@@ -18,17 +18,23 @@ def get_locale():
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-login.login_view = 'auth.login'
-login.login_message = _l('Please log in to access this page.')
+login.login_view = 'auth.login' # type: ignore
+login.login_message = _l('Please log in to access this page.') # type: ignore
 mail = Mail()
 moment = Moment()
 babel = Babel()
 
 
 def create_app(config_class=Config):
+    """
+    Application factory function to create and configure the Flask app.
+    :param config_class: The configuration class to use.
+    :return: Configured Flask app instance.
+    """
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    # Initialize extensions 
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
@@ -36,6 +42,7 @@ def create_app(config_class=Config):
     moment.init_app(app)
     babel.init_app(app, locale_selector=get_locale)
 
+    # Blueprint registrations
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
@@ -48,7 +55,8 @@ def create_app(config_class=Config):
     from app.cli import bp as cli_bp
     app.register_blueprint(cli_bp)
 
-    if not app.debug and not app.testing:
+    # Logging configuration
+    if not app.debug and not app.testing: # This ensures logging is not set up during testing or debugging
         if app.config['MAIL_SERVER']:
             auth = None
             if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
