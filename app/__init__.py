@@ -12,7 +12,12 @@ from config import Config
 from elasticsearch import Elasticsearch
 
 
-def get_locale():
+def get_locale() -> str | None:
+    """
+    Selects the best match for supported languages based on the client's
+    Accept-Language header.
+    :return: The best matching language code.
+    """
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
 
@@ -26,7 +31,7 @@ moment = Moment()
 babel = Babel()
 
 
-def create_app(config_class=Config):
+def create_app(config_class=Config) -> Flask:
     """
     Application factory function to create and configure the Flask app.
     :param config_class: The configuration class to use.
@@ -42,6 +47,14 @@ def create_app(config_class=Config):
     mail.init_app(app)
     moment.init_app(app)
     babel.init_app(app, locale_selector=get_locale)
+    # Elasticsearch presents the challenge that it isn't wrapped by a Flask extension.
+    # You cannot create the Elasticsearch instance in the global scope like we did above,
+    # because to inizialize it we need access to app.config, which only becomes
+    # available after the create_app() function is invoked. The solution here is to add
+    # a elasticsearch attribute to the app instance in the application factory function.
+    # Adding a new attribute to the app instance may seem a little strange,
+    # but Python objects are not strict in their structure,
+    # and new attributes can be added to them at any time.
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) if app.config['ELASTICSEARCH_URL'] else None # pyright: ignore[reportAttributeAccessIssue]
 
     # Blueprint registrations
