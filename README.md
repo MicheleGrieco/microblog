@@ -261,3 +261,4 @@ docker run -p 5000:5000 microblog
 * [Flask-Babel documentation](https://python-babel.github.io/flask-babel/)
 * [Click documentation](https://click.palletsprojects.com/en/stable/)
 * [Microsoft Translator documentation](https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/reference/v3/translate)
+* [Elastic Search documentation](https://www.elastic.co/docs)
