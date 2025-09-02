@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# type: ignore
 from datetime import datetime, timezone, timedelta
 import unittest
 from app import create_app, db
