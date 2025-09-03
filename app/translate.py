@@ -3,7 +3,7 @@ from flask import current_app
 from flask_babel import _
 
 
-def translate(text, source_language, dest_language):
+def translate(text, source_language, dest_language) -> str:
     if 'MS_TRANSLATOR_KEY' not in current_app.config or \
             not current_app.config['MS_TRANSLATOR_KEY']:
         return _('Error: the translation service is not configured.')
