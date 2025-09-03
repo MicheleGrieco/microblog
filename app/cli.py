@@ -22,14 +22,14 @@ bp = Blueprint('cli', __name__, cli_group=None)
 
 
 @bp.cli.group()
-def translate():
+def translate() -> None:
     """Translation and localization commands."""
     pass
 
 
 @translate.command()
 @click.argument('lang')
-def init(lang):
+def init(lang) -> None:
     """Initialize a new language."""
     if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
         raise RuntimeError('extract command failed')
@@ -40,7 +40,7 @@ def init(lang):
 
 
 @translate.command()
-def update():
+def update() -> None:
     """Update all languages."""
     if os.system('pybabel extract -F babel.cfg -k _l -o messages.pot .'):
         raise RuntimeError('extract command failed')
@@ -50,7 +50,7 @@ def update():
 
 
 @translate.command()
-def compile():
+def compile() -> None:
     """Compile all languages."""
     if os.system('pybabel compile -d app/translations'):
         raise RuntimeError('compile command failed')
