@@ -1,14 +1,14 @@
 # type: ignore
 
 """
-    Module name: search.py
-    Author: Michele Grieco
-    Description:
-        Elasticsearch integration for indexing and searching model instances.
-    Usage:
-        - add_to_index(index, model): Add a model instance to the Elasticsearch index.
-        - remove_from_index(index, model): Remove a model instance from the Elasticsearch index.
-        - query_index(index, query, page, per_page): Query the Elasticsearch index for a given search term.
+Module name: search.py
+Author: Michele Grieco
+Description:
+    Elasticsearch integration for indexing and searching model instances.
+Usage:
+    - add_to_index(index, model): Add a model instance to the Elasticsearch index.
+    - remove_from_index(index, model): Remove a model instance from the Elasticsearch index.
+    - query_index(index, query, page, per_page): Query the Elasticsearch index for a given search term.
 """
 
 from flask import current_app
