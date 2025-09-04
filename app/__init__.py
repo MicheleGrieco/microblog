@@ -1,3 +1,13 @@
+"""
+Module name: __init__.py
+Author: Michele Grieco
+Description:
+    Application factory for the Flask microblog application.
+    Initializes extensions and registers blueprints.
+Usage:
+    - create_app(config_class=Config): Create and configure the Flask app instance.
+"""
+
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
@@ -20,7 +30,7 @@ def get_locale() -> str | None:
     """
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 
-
+# Initialize Flask extensions
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
