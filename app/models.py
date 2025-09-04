@@ -1,3 +1,21 @@
+# type: ignore
+"""
+Module name: models.py
+Author: Michele Grieco
+Description:
+    Database models for the Flask microblog application.
+    This module defines the User and Post models, as well as a many-to-many
+    relationship for followers.
+    The User model includes methods for password hashing, avatar generation,
+    following/unfollowing users, and generating password reset tokens.
+    The Post model includes a searchable mixin to enable full-text search
+    capabilities using Elasticsearch.
+Usage:
+    - User: Represents a user in the application.
+    - Post: Represents a blog post in the application.
+    - SearchableMixin: Mixin class to add search capabilities to models.
+"""
+
 from datetime import datetime, timezone
 from hashlib import md5
 from time import time
@@ -14,7 +32,14 @@ from app.search import add_to_index, remove_from_index, query_index
 class SearchableMixin:
     
     @classmethod
-    def search(cls, expression, page, per_page):
+    def search(cls, expression, page, per_page) -> tuple[list, int]:
+        """
+        Search for records matching the given expression.
+        :param expression: The search expression.
+        :param page: The page number for pagination.
+        :param per_page: The number of items per page.
+        :return: A tuple containing the list of matching records and the total count.
+        """
         ids, total = query_index(cls.__tablename__, expression, page, per_page) # type: ignore
         if total == 0:
             return [], 0
@@ -25,7 +50,12 @@ class SearchableMixin:
         return db.session.scalars(query), total
     
     @classmethod
-    def before_commit(cls, session):
+    def before_commit(cls, session) -> None:
+        """
+        Store changes to be processed after the commit.
+        :param session: The database session.
+        :return: None
+        """
         session._changes = {
             'add': list(session.new),
             'update': list(session.dirty),
@@ -34,6 +64,11 @@ class SearchableMixin:
     
     @classmethod
     def after_commit(cls, session):
+        """
+        Process changes after the commit to update the search index.
+        :param session: The database session.
+        :return: None
+        """
         for obj in session._changes['add']:
             if isinstance(obj, SearchableMixin):
                 add_to_index(obj.__tablename__, obj)
@@ -47,13 +82,18 @@ class SearchableMixin:
         
     @classmethod
     def reindex(cls):
+        """
+        Reindex all records of the model.
+        :return: None
+        """
         for obj in db.session.scalars(sa.select(cls)):
             add_to_index(cls.__tablename__, obj)
 
+# Set up event listeners to handle before and after commit events
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
-
+# Association table for followers relationship
 followers = sa.Table(
     'followers',
     db.metadata,
