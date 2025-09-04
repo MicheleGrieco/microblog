@@ -1,4 +1,15 @@
 # type: ignore
+
+"""
+Module name: tests.py
+Author: Michele Grieco
+Description:
+    Unit tests for the User and Post models in the Flask microblog application.
+    Tests cover password hashing, avatar generation, following functionality, and post retrieval.
+Usage:
+    - Run the tests using a test runner like unittest.
+"""
+
 from datetime import datetime, timezone, timedelta
 import unittest
 from app import create_app, db
