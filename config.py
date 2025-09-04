@@ -1,3 +1,13 @@
+"""
+Module name: config.py
+Author: Michele Grieco
+Description:
+    Configuration settings for the Flask application.
+    Loads environment variables from a .env file for sensitive information.
+Usage:
+    - Config: Main configuration class containing various settings.
+"""
+
 import os
 from dotenv import load_dotenv
 
