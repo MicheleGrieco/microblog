@@ -126,41 +126,88 @@ class User(UserMixin, db.Model):
         back_populates='following')
 
     def __repr__(self) -> str:
+        """
+        String representation of the User object.
+        :return: A string representing the user.
+        """
         return '<User {}>'.format(self.username)
 
     def set_password(self, password) -> None:
+        """
+        Hash and set the user's password.
+        :param password: The plaintext password to hash and set.
+        :return: None
+        """
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password) -> bool:
+        """
+        Check if the provided password matches the stored password hash.
+        :param password: The plaintext password to check.
+        :return: True if the password matches, False otherwise.
+        """
         return check_password_hash(self.password_hash, password) # type: ignore
 
     def avatar(self, size) -> str:
+        """
+        Generate a Gravatar URL for the user's avatar.
+        :param size: The size of the avatar in pixels.
+        :return: The URL of the user's Gravatar.
+        """
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
 
     def follow(self, user) -> None:
+        """
+        Follow another user.
+        :param user: The User object to follow.
+        :return: None
+        """
         if not self.is_following(user):
             self.following.add(user)
 
     def unfollow(self, user) -> None:
+        """
+        Unfollow another user.
+        :param user: The User object to unfollow.
+        :return: None
+        """
         if self.is_following(user):
             self.following.remove(user)
 
     def is_following(self, user) -> bool:
+        """
+        Check if the user is following another user.
+        :param user: The User object to check.
+        :return: True if the user is following the other user, False otherwise.
+        """
         query = self.following.select().where(User.id == user.id)
         return db.session.scalar(query) is not None
 
     def followers_count(self) -> Optional[int]:
+        """
+        Count the number of followers the user has.
+        :return: The number of followers.
+        """
         query = sa.select(sa.func.count()).select_from(
             self.followers.select().subquery())
         return db.session.scalar(query)
 
     def following_count(self) -> Optional[int]:
+        """
+        Count the number of users the user is following.
+        :return: The number of users being followed.
+        """
         query = sa.select(sa.func.count()).select_from(
             self.following.select().subquery())
         return db.session.scalar(query)
 
     def following_posts(self):
+        """
+        Retrieve posts from users that the current user is following,
+        as well as the user's own posts, ordered by timestamp descending.
+        :return: A query object for the posts.
+        """
         Author = so.aliased(User)
         Follower = so.aliased(User)
         return (
@@ -176,12 +223,22 @@ class User(UserMixin, db.Model):
         )
 
     def get_reset_password_token(self, expires_in=600) -> str:
+        """
+        Generate a JWT token for password reset.
+        :param expires_in: The expiration time in seconds (default is 600 seconds).
+        :return: The JWT token as a string.
+        """
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_reset_password_token(token) -> Optional['User']:
+        """
+        Verify a JWT token for password reset and return the corresponding user.
+        :param token: The JWT token to verify.
+        :return: The User object if the token is valid, None otherwise.
+        """
         try:
             id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
@@ -190,8 +247,14 @@ class User(UserMixin, db.Model):
         return db.session.get(User, id)
 
 
+# Flask-Login user loader callback
 @login.user_loader
 def load_user(id) -> Optional[User]:
+    """
+    Load a user by ID for Flask-Login.
+    :param id: The user ID.
+    :return: The User object if found, None otherwise.
+    """
     return db.session.get(User, int(id))
 
 
@@ -208,4 +271,8 @@ class Post(SearchableMixin, db.Model):
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
     def __repr__(self) -> str:
+        """
+        String representation of the Post object.
+        :return: A string representing the post.
+        """
         return '<Post {}>'.format(self.body)
