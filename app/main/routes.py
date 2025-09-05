@@ -1,3 +1,25 @@
+# type: ignore
+
+"""
+Module name: routes.py
+Author: Michele Grieco
+Description:
+    This module defines the routes for the 'main' Blueprint in the Flask application.
+    It includes routes for the home page, user profiles, editing profiles, following/unfollowing users,
+    exploring posts, translating text, and searching posts.
+    Each route is associated with a specific function that handles the request and returns a response.
+Usage:
+    - before_request: Updates the last seen time for authenticated users and sets up the search form.
+    - index: Displays the home page with a form to submit new posts and a list of posts from followed users.
+    - explore: Displays a page with all posts in the system.
+    - user: Displays a user's profile and their posts.
+    - edit_profile: Allows users to edit their profile information.
+    - follow: Allows users to follow another user.
+    - unfollow: Allows users to unfollow another user.
+    - translate_text: Translates text from one language to another using a translation service.
+    - search: Allows users to search for posts containing specific keywords.
+"""
+
 from datetime import datetime, timezone
 from flask import render_template, flash, redirect, url_for, request, g, \
     current_app
@@ -14,6 +36,12 @@ from app.main import bp
 
 @bp.before_app_request
 def before_request():
+    """
+    Function to be executed before each request.
+    Updates the last seen time for authenticated users and sets up the search form.
+    Also sets the locale for the current request.
+    :return: None
+    """
     if current_user.is_authenticated:
         current_user.last_seen = datetime.now(timezone.utc)
         db.session.commit()
@@ -25,6 +53,11 @@ def before_request():
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    """
+    Home page route.
+    Displays a form to submit new posts and a list of posts from followed users.
+    :return: Rendered template for the index page.
+    """
     form = PostForm()
     if form.validate_on_submit():
         try:
@@ -53,6 +86,11 @@ def index():
 @bp.route('/explore')
 @login_required
 def explore():
+    """
+    Explore page route.
+    Displays a page with all posts in the system.
+    :return: Rendered template for the explore page.
+    """
     page = request.args.get('page', 1, type=int)
     query = sa.select(Post).order_by(Post.timestamp.desc())
     posts = db.paginate(query, page=page,
@@ -70,6 +108,12 @@ def explore():
 @bp.route('/user/<username>')
 @login_required
 def user(username):
+    """
+    User profile page route.
+    Displays a user's profile and their posts.
+    :param username: The username of the user whose profile is to be displayed.
+    :return: Rendered template for the user profile page.
+    """
     user = db.first_or_404(sa.select(User).where(User.username == username))
     page = request.args.get('page', 1, type=int)
     query = user.posts.select().order_by(Post.timestamp.desc())
@@ -88,6 +132,11 @@ def user(username):
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
+    """
+    Edit profile page route.
+    Allows users to edit their profile information.
+    :return: Rendered template for the edit profile page.
+    """
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
@@ -105,6 +154,12 @@ def edit_profile():
 @bp.route('/follow/<username>', methods=['POST'])
 @login_required
 def follow(username):
+    """
+    Follow user route.
+    Allows users to follow another user.
+    :param username: The username of the user to follow.
+    :return: Redirects to the followed user's profile page or the index page.
+    """
     form = EmptyForm()
     if form.validate_on_submit():
         user = db.session.scalar(
@@ -126,6 +181,12 @@ def follow(username):
 @bp.route('/unfollow/<username>', methods=['POST'])
 @login_required
 def unfollow(username):
+    """
+    Unfollow user route.
+    Allows users to unfollow another user.
+    :param username: The username of the user to unfollow.
+    :return: Redirects to the unfollowed user's profile page or the index page.
+    """
     form = EmptyForm()
     if form.validate_on_submit():
         user = db.session.scalar(
@@ -147,6 +208,11 @@ def unfollow(username):
 @bp.route('/translate', methods=['POST'])
 @login_required
 def translate_text():
+    """
+    Translate text route.
+    Translates text from one language to another using a translation service.
+    :return: A JSON response containing the translated text.
+    """
     data = request.get_json()
     return {'text': translate(data['text'],
                               data['source_language'],
@@ -155,6 +221,11 @@ def translate_text():
 @bp.route('/search')
 @login_required
 def search():
+    """
+    Search route.
+    Allows users to search for posts containing specific keywords.
+    :return: Rendered template for the search results page.
+    """
     if not g.search_form.validate():
         return redirect(url_for('main.explore'))
     page = request.args.get('page', 1, type=int)
