@@ -1,3 +1,12 @@
+"""
+Module name: email.py
+Author: Michele Grieco
+Description:
+    This module contains functions for sending emails related to user authentication, such as password reset emails.
+Usage:
+    - send_password_reset_email(user): Sends a password reset email to the specified user.
+"""
+
 from flask import render_template, current_app
 from flask_babel import _
 from app.email import send_email
