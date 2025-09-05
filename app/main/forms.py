@@ -1,3 +1,13 @@
+# type: ignore
+
+"""
+Module name: forms.py
+Author: Michele Grieco
+Description:
+    This module defines various form classes used in the Flask application.
+    It includes forms for editing profiles, submitting posts, searching, and more.
+"""
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import ValidationError, DataRequired, Length
