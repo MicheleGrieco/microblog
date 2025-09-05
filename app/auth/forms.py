@@ -1,3 +1,16 @@
+# type: ignore
+"""
+Module name: forms.py
+Author: Michele Grieco
+Description:
+    This module contains form classes for user authentication, including login, registration, and password reset forms.
+Usage:
+    - LoginForm: Form for user login.
+    - RegistrationForm: Form for new user registration.
+    - ResetPasswordRequestForm: Form to request a password reset.
+    - ResetPasswordForm: Form to reset the password.
+"""
+
 from flask_wtf import FlaskForm
 from flask_babel import _, lazy_gettext as _l
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
