@@ -1,3 +1,18 @@
+# type: ignore
+
+"""
+Module name: routes.py
+Author: Michele Grieco
+Description:
+    This module contains the routes for user authentication, including login, logout, registration, and password reset.
+Usage:
+    - /login: Route for user login.
+    - /logout: Route for user logout.
+    - /register: Route for new user registration.
+    - /reset_password_request: Route to request a password reset.
+    - /reset_password/<token>: Route to reset the password using a token.
+"""
+
 from flask import render_template, redirect, url_for, flash, request
 from urllib.parse import urlsplit
 from flask_login import login_user, logout_user, current_user
